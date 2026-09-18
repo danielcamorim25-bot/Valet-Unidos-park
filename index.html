@@ -6,7 +6,7 @@
  
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Valet Unidos Park - Sistema Integrado MP</title>
+  <title>Valet Unidos Park - Sistema Integrado Seguro (Caixa 2)</title>
 
   <!-- HTML5-QRCode (Scanner por toque/câmera) -->
   <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
@@ -16,28 +16,29 @@
 
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-    body { background-color: #0b1329; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; padding: 10px; color: #333; }
-    .app-card { width: 100%; max-width: 480px; background-color: #0b1329; border-radius: 20px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.5); display: flex; flex-direction: column; min-height: 95vh; }
-    .header { background-color: #1e293b; color: #ffffff; padding: 15px; text-align: center; position: relative; }
+    body { background-color: #0b1329; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; padding: 10px; color: #f8fafc; }
+    .app-card { width: 100%; max-width: 480px; background-color: #0f172a; border-radius: 20px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.6); display: flex; flex-direction: column; min-height: 95vh; border: 1px solid #1e293b; }
+    .header { background-color: #1e293b; color: #ffffff; padding: 15px; text-align: center; position: relative; border-bottom: 2px solid #334155; }
     .header-title { display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 1.2rem; font-weight: bold; }
-    .header p { font-size: 0.8rem; color: #94a3b8; margin-top: 2px; }
+    .header p { font-size: 0.8rem; color: #38bdf8; margin-top: 2px; }
     .btn-logout { position: absolute; top: 15px; right: 12px; background: #ef4444; color: white; border: none; padding: 6px 12px; border-radius: 6px; font-size: 0.8rem; font-weight: bold; cursor: pointer; }
     .progress-bg { background-color: #334155; height: 6px; width: 100%; }
-    .progress-bar { background-color: #2563eb; height: 100%; width: 20%; transition: width 0.3s; }
+    .progress-bar { background-color: #f59e0b; height: 100%; width: 20%; transition: width 0.3s; }
     .content { padding: 12px; flex: 1; display: flex; flex-direction: column; }
     .title { font-size: 1.2rem; font-weight: bold; color: #ffffff; margin-bottom: 4px; text-align: center; }
     .subtitle { font-size: 0.85rem; color: #94a3b8; margin-bottom: 12px; text-align: center; }
-    .input-field { width: 100%; padding: 12px; border: 2px solid #cbd5e1; border-radius: 10px; font-size: 1.2rem; margin-bottom: 15px; outline: none; }
+    .input-field { width: 100%; padding: 12px; border: 2px solid #334155; background-color: #1e293b; color: #fff; border-radius: 10px; font-size: 1.2rem; margin-bottom: 15px; outline: none; }
+    .input-field:focus { border-color: #f59e0b; }
     textarea.input-field { resize: vertical; min-height: 70px; }
 
     #viewValetMenu { display: flex; flex-direction: column; flex: 1; height: 100%; }
-    .valet-layout-container { background-color: #ffffff; border-radius: 16px; padding: 12px; display: flex; flex-direction: column; gap: 12px; flex: 1; min-height: 75vh; }
+    .valet-layout-container { background-color: #1e293b; border-radius: 16px; padding: 12px; display: flex; flex-direction: column; gap: 12px; flex: 1; min-height: 75vh; border: 1px solid #334155; }
     .block-btn { width: 100%; border: none; border-radius: 20px; display: flex; align-items: center; justify-content: center; cursor: pointer; text-decoration: none; transition: transform 0.1s ease; position: relative; }
     .block-btn:active { transform: scale(0.97); }
-    .label-box { background-color: #ffffff; color: #000000; padding: 14px 28px; border-radius: 14px; font-size: 1.5rem; font-weight: 800; box-shadow: 0 4px 12px rgba(0,0,0,0.2); text-align: center; line-height: 1.2; }
-    .block-entrada { background-color: #25d366; flex: 2; min-height: 150px; }
-    .block-saida { background-color: #ef4444; flex: 2.5; min-height: 180px; }
-    .block-admin { background-color: #d1d5db; flex: 1; min-height: 60px; }
+    .label-box { background-color: #0f172a; color: #f8fafc; padding: 14px 28px; border-radius: 14px; font-size: 1.5rem; font-weight: 800; box-shadow: 0 4px 12px rgba(0,0,0,0.4); text-align: center; line-height: 1.2; border: 1px solid #334155; }
+    .block-entrada { background-color: #059669; flex: 2; min-height: 150px; }
+    .block-saida { background-color: #dc2626; flex: 2.5; min-height: 180px; }
+    .block-admin { background-color: #475569; flex: 1; min-height: 60px; }
 
     .badge-alert {
       position: absolute;
@@ -63,9 +64,9 @@
     }
 
     .alert-banner {
-      background-color: #fee2e2;
+      background-color: #7f1d1d;
       border: 2px solid #ef4444;
-      color: #991b1b;
+      color: #fee2e2;
       padding: 12px;
       border-radius: 10px;
       font-weight: bold;
@@ -75,87 +76,79 @@
     }
 
     .btn-camera { background-color: #0284c7; color: #ffffff; padding: 14px; font-size: 0.95rem; border-radius: 10px; margin-bottom: 12px; border: none; width: 100%; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; }
-    .btn-camera-avaria { background-color: #eab308; color: #ffffff; }
-    .btn-warning { background-color: #f59e0b; color: #fff; }
+    .btn-camera-avaria { background-color: #d97706; color: #ffffff; }
+    .btn-warning { background-color: #d97706; color: #fff; }
 
     .btn-action-simple { width: 100%; padding: 14px; border: none; border-radius: 10px; font-size: 1rem; font-weight: bold; cursor: pointer; color: white; }
-    .btn-green { background-color: #10b981; }
-    .btn-gray { background-color: #475569; }
-    .btn-dark { background-color: #0f172a; }
+    .btn-green { background-color: #059669; }
+    .btn-gray { background-color: #334155; }
+    .btn-dark { background-color: #0f172a; border: 1px solid #475569; }
     .btn-blue { background-color: #2563eb; }
-    .btn-red { background-color: #ef4444; }
+    .btn-red { background-color: #dc2626; }
 
     .btn-photo-view { background-color: #0284c7; color: white; border: none; padding: 6px 8px; border-radius: 6px; font-size: 0.75rem; font-weight: bold; cursor: pointer; }
-    .btn-delete-item { background-color: #ef4444; color: white; border: none; padding: 6px 8px; border-radius: 6px; font-size: 0.75rem; font-weight: bold; cursor: pointer; }
+    .btn-delete-item { background-color: #dc2626; color: white; border: none; padding: 6px 8px; border-radius: 6px; font-size: 0.75rem; font-weight: bold; cursor: pointer; }
 
-    .option-btn { width: 100%; padding: 14px; border: 2px solid #cbd5e1; border-radius: 10px; background-color: #ffffff; color: #0f172a; font-size: 0.95rem; font-weight: bold; cursor: pointer; text-align: left; margin-bottom: 10px; }
-    .option-btn.selected { border-color: #2563eb; background-color: #eff6ff; color: #2563eb; }
+    /* Estilos customizados para a Área do Restaurante (Tons Aconchegantes: Âmbar/Dourado/Marrom) */
+    #viewTablet { background: #1c1510; padding: 20px; border-radius: 16px; border: 1px solid #452b14; }
+    #viewTablet .input-field { background-color: #2d2118; border-color: #5c3d22; color: #fef3c7; }
+    #viewTablet .input-field:focus { border-color: #f59e0b; }
+    
+    .numpad-btn { background-color: #2d2118; border: 1px solid #5c3d22; border-radius: 12px; font-size: 1.8rem; font-weight: bold; color: #fef3c7; padding: 16px 0; cursor: pointer; display: flex; align-items: center; justify-content: center; user-select: none; transition: background-color 0.1s; }
+    .numpad-btn:active { background-color: #452b14; }
 
-    .qr-container { text-align: center; background-color: #f8fafc; padding: 15px; border-radius: 12px; border: 1px dashed #cbd5e1; margin-bottom: 15px; }
-    .price { font-size: 1.8rem; font-weight: bold; color: #0f172a; margin-bottom: 10px; }
-    .qr-code { width: 160px; height: 160px; margin: 0 auto; display: block; }
+    .option-btn { width: 100%; padding: 14px; border: 2px solid #5c3d22; border-radius: 10px; background-color: #2d2118; color: #fef3c7; font-size: 0.95rem; font-weight: bold; cursor: pointer; text-align: left; margin-bottom: 10px; }
+    .option-btn.selected { border-color: #f59e0b; background-color: #1c1510; color: #f59e0b; }
 
-    .status-msg { background-color: #dcfce7; color: #15803d; padding: 12px; border-radius: 8px; font-size: 0.9rem; text-align: center; font-weight: bold; margin-bottom: 10px; }
-    .photo-preview-container { text-align: center; margin-bottom: 12px; }
-    .photo-preview { max-width: 100%; max-height: 160px; border-radius: 10px; margin-top: 6px; border: 2px solid #cbd5e1; display: none; }
+    .qr-container { text-align: center; background-color: #2d2118; padding: 15px; border-radius: 12px; border: 1px dashed #78350f; margin-bottom: 15px; }
+    .price { font-size: 1.8rem; font-weight: bold; color: #f59e0b; margin-bottom: 10px; }
+    .qr-code { width: 160px; height: 160px; margin: 0 auto; display: block; background: #fff; padding: 6px; border-radius: 8px; }
 
-    .ticket-card { background-color: #f8fafc; border: 2px solid #e2e8f0; border-left: 6px solid #10b981; border-radius: 10px; padding: 15px; margin-bottom: 12px; }
-    .ticket-card.pending { border-left-color: #ef4444; background-color: #fff5f5; }
-    .ticket-card.patio { border-left-color: #0284c7; background-color: #f0f9ff; }
-    .ticket-card.concluido { border-left-color: #64748b; background-color: #f1f5f9; opacity: 0.9; }
-    .ticket-header { display: flex; justify-content: space-between; font-weight: bold; font-size: 1.05rem; color: #0f172a; margin-bottom: 6px; }
-    .ticket-detail { font-size: 0.85rem; color: #475569; margin-bottom: 4px; }
+    .status-msg { background-color: #78350f; color: #fef3c7; padding: 12px; border-radius: 8px; font-size: 0.9rem; text-align: center; font-weight: bold; margin-bottom: 10px; }
 
-    .badge-status { display: inline-block; padding: 4px 8px; border-radius: 6px; font-size: 0.75rem; font-weight: bold; }
-    .badge-done { background-color: #dcfce7; color: #15803d; }
-    .badge-pending { background-color: #fee2e2; color: #991b1b; }
-    .badge-auto { background-color: #e0f2fe; color: #0369a1; }
+    .confirmation-card { text-align: center; background-color: #451a03; border: 2px solid #b45309; border-radius: 16px; padding: 20px; margin-top: 10px; box-shadow: 0 4px 15px rgba(180, 83, 9, 0.3); }
+    .success-icon { font-size: 3.5rem; color: #f59e0b; margin-bottom: 10px; }
+    /* Fim dos estilos do restaurante */
 
-    .admin-filter-box { background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 12px; padding: 10px; margin-bottom: 15px; text-align: center; }
-    .admin-filter-box label { font-size: 0.8rem; font-weight: bold; color: #475569; display: block; margin-bottom: 4px; }
-    .admin-filter-box input[type="date"] { width: 100%; padding: 8px; border-radius: 8px; border: 1px solid #94a3b8; font-size: 1rem; font-weight: bold; color: #0f172a; text-align: center; }
+    .admin-filter-box { background: #1e293b; border: 1px solid #334155; border-radius: 12px; padding: 10px; margin-bottom: 15px; text-align: center; }
+    .admin-filter-box label { font-size: 0.8rem; font-weight: bold; color: #cbd5e1; display: block; margin-bottom: 4px; }
+    .admin-filter-box input[type="date"] { width: 100%; padding: 8px; border-radius: 8px; border: 1px solid #475569; background: #0f172a; font-size: 1rem; font-weight: bold; color: #fff; text-align: center; }
 
     .admin-metrics { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 15px; }
-    .metric-box { background-color: #f1f5f9; padding: 12px; border-radius: 10px; text-align: center; border-left: 4px solid #2563eb; }
-    .metric-title { font-size: 0.75rem; color: #64748b; font-weight: bold; }
-    .metric-value { font-size: 1.3rem; color: #0f172a; font-weight: bold; margin-top: 4px; }
+    .metric-box { background-color: #1e293b; padding: 12px; border-radius: 10px; text-align: center; border-left: 4px solid #38bdf8; border: 1px solid #334155; }
+    .metric-title { font-size: 0.75rem; color: #94a3b8; font-weight: bold; }
+    .metric-value { font-size: 1.3rem; color: #f8fafc; font-weight: bold; margin-top: 4px; }
 
-    /* Estilos do Gráfico Interativo por Dias na Área do Admin */
-    .admin-chart-container { background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 12px; padding: 12px; margin-bottom: 15px; }
-    .chart-bar-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; font-size: 0.8rem; color: #334155; }
-    .chart-bar-bg { flex: 1; background: #e2e8f0; height: 16px; border-radius: 8px; margin: 0 8px; overflow: hidden; position: relative; }
-    .chart-bar-fill { background: #2563eb; height: 100%; border-radius: 8px; transition: width 0.4s ease; }
+    .admin-chart-container { background: #1e293b; border: 1px solid #334155; border-radius: 12px; padding: 12px; margin-bottom: 15px; }
+    .chart-bar-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; font-size: 0.8rem; color: #cbd5e1; }
+    .chart-bar-bg { flex: 1; background: #334155; height: 16px; border-radius: 8px; margin: 0 8px; overflow: hidden; position: relative; }
+    .chart-bar-fill { background: #38bdf8; height: 100%; border-radius: 8px; transition: width 0.4s ease; }
 
-    .admin-table { width: 100%; border-collapse: collapse; font-size: 0.75rem; background-color: #fff; }
-    .admin-table th, .admin-table td { border: 1px solid #cbd5e1; padding: 6px 4px; text-align: center; }
-    .admin-table th { background-color: #f1f5f9; color: #0f172a; }
+    .admin-table { width: 100%; border-collapse: collapse; font-size: 0.75rem; background-color: #1e293b; color: #f8fafc; }
+    .admin-table th, .admin-table td { border: 1px solid #334155; padding: 6px 4px; text-align: center; }
+    .admin-table th { background-color: #0f172a; color: #38bdf8; }
 
     .action-td-container { display: flex; align-items: center; justify-content: center; gap: 4px; }
 
     .gallery-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-    .gallery-card { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 8px; font-size: 0.75rem; }
+    .gallery-card { background: #1e293b; border: 1px solid #334155; border-radius: 8px; padding: 8px; font-size: 0.75rem; }
     .gallery-card img { width: 100%; height: 90px; object-fit: cover; border-radius: 6px; margin-bottom: 4px; cursor: pointer; }
-
-    .confirmation-card { text-align: center; background-color: #f0fdf4; border: 2px solid #22c55e; border-radius: 16px; padding: 20px; margin-top: 10px; box-shadow: 0 4px 15px rgba(34, 197, 94, 0.2); }
-    .success-icon { font-size: 3.5rem; color: #22c55e; margin-bottom: 10px; }
 
     .camera-modal, .photo-modal { display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background-color: rgba(0,0,0,0.9); z-index: 9999; flex-direction: column; align-items: center; justify-content: center; padding: 20px; }
     .camera-video { width: 100%; max-width: 440px; height: 70vh; object-fit: cover; border-radius: 16px; background-color: #1e293b; }
     .camera-controls { display: flex; gap: 12px; width: 100%; max-width: 440px; margin-top: 15px; }
-    .btn-capture { flex: 2; background-color: #10b981; color: white; border: none; padding: 14px; border-radius: 10px; font-size: 1rem; font-weight: bold; cursor: pointer; }
-    .btn-cancel { flex: 1; background-color: #ef4444; color: white; border: none; padding: 14px; border-radius: 10px; font-size: 0.95rem; font-weight: bold; cursor: pointer; }
+    .btn-capture { flex: 2; background-color: #059669; color: white; border: none; padding: 14px; border-radius: 10px; font-size: 1rem; font-weight: bold; cursor: pointer; }
+    .btn-cancel { flex: 1; background-color: #dc2626; color: white; border: none; padding: 14px; border-radius: 10px; font-size: 0.95rem; font-weight: bold; cursor: pointer; }
     .modal-img { max-width: 90%; max-height: 70vh; border-radius: 12px; border: 2px solid white; margin-bottom: 15px; }
 
-    .btn-copy-pix { background-color: #2563eb; color: white; border: none; padding: 12px; border-radius: 8px; font-weight: bold; width: 100%; margin-top: 10px; cursor: pointer; font-size: 0.9rem; }
+    .btn-copy-pix { background-color: #b45309; color: white; border: none; padding: 12px; border-radius: 8px; font-weight: bold; width: 100%; margin-top: 10px; cursor: pointer; font-size: 0.9rem; }
 
     .numpad-container { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 15px; }
-    .numpad-btn { background-color: #f1f5f9; border: 1px solid #cbd5e1; border-radius: 12px; font-size: 1.8rem; font-weight: bold; color: #0f172a; padding: 16px 0; cursor: pointer; display: flex; align-items: center; justify-content: center; user-select: none; transition: background-color 0.1s; }
-    .numpad-btn:active { background-color: #cbd5e1; }
     .action-buttons-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 10px; }
-    .btn-sketch-cancel { background-color: #ff5252; color: white; font-size: 1.1rem; font-weight: bold; border: none; border-radius: 16px; padding: 16px 10px; cursor: pointer; line-height: 1.2; }
-    .btn-sketch-confirm { background-color: #4caf50; color: white; font-size: 1.1rem; font-weight: bold; border: none; border-radius: 16px; padding: 16px 10px; cursor: pointer; line-height: 1.2; }
+    .btn-sketch-cancel { background-color: #7f1d1d; color: white; font-size: 1.1rem; font-weight: bold; border: none; border-radius: 16px; padding: 16px 10px; cursor: pointer; line-height: 1.2; }
+    .btn-sketch-confirm { background-color: #d97706; color: white; font-size: 1.1rem; font-weight: bold; border: none; border-radius: 16px; padding: 16px 10px; cursor: pointer; line-height: 1.2; }
 
-    #ocrStatus { font-size: 0.8rem; color: #2563eb; text-align: center; margin-top: 4px; font-weight: bold; display: none; }
+    #ocrStatus { font-size: 0.8rem; color: #38bdf8; text-align: center; margin-top: 4px; font-weight: bold; display: none; }
 
     #printArea { display: none; }
     @media print {
@@ -176,7 +169,7 @@
       <div class="header-title">
         <span>🚗</span> <span id="appTitle">Unidos Park Valet</span>
       </div>
-      <p id="appSub">Painel Operacional</p>
+      <p id="appSub">Painel Operacional Seguro</p>
       <button class="btn-logout" id="btnLogout" style="display: none;" onclick="fazerLogout()">Sair</button>
     </div>
 
@@ -187,14 +180,14 @@
     <div class="content">
 
       <!-- LOGIN -->
-      <div id="viewLogin" style="display: block; background: #0b1329; padding: 10px; border-radius: 16px; text-align: center;">
+      <div id="viewLogin" style="display: block; background: #0f172a; padding: 10px; border-radius: 16px; text-align: center;">
         <div style="margin-bottom: 20px; display: flex; justify-content: center; align-items: center;">
-          <img src="logo.png" alt="Valet Call Logo" style="max-width: 220px; width: 100%; height: auto; border-radius: 12px; border: 1px solid #1e293b;" onerror="this.style.display='none'">
+          <h2 style="color: #38bdf8; font-size: 1.5rem;">🔒 SISTEMA SEGURO CAIXA 2</h2>
         </div>
 
-        <div style="background: #ffffff; padding: 20px; border-radius: 16px; box-shadow: 0 4px 15px rgba(0,0,0,0.3);">
-          <div class="title" style="color:#0f172a;">Acesso ao Sistema</div>
-          <div class="subtitle" style="color:#64748b;">Selecione o perfil e acesse</div>
+        <div style="background: #1e293b; padding: 20px; border-radius: 16px; box-shadow: 0 4px 15px rgba(0,0,0,0.4); border: 1px solid #334155;">
+          <div class="title" style="color:#f8fafc;">Acesso ao Sistema</div>
+          <div class="subtitle" style="color:#94a3b8;">Selecione o perfil e acesse</div>
 
           <input type="text" id="userInput" class="input-field" placeholder="Usuário">
           <input type="password" id="passInput" class="input-field" placeholder="Senha">
@@ -213,7 +206,7 @@
             <div class="label-box">Entrada<br>Carros</div>
           </button>
 
-          <!-- BOTÃO VERMELHO DE SAÍDA DE CARROS -->
+          <!-- BOTÃO DE SAÍDA DE CARROS -->
           <button class="block-btn block-saida" onclick="abrirSubTelaValet('saida')">
             <div id="badgeSaidasAlert" class="badge-alert" style="display: none;">0</div>
             <div class="label-box">Saída de<br>Carros</div>
@@ -226,9 +219,9 @@
       </div>
 
       <!-- ENTRADA VALET -->
-      <div id="viewValetEntrada" style="display: none; background: #fff; padding: 20px; border-radius: 16px;">
-        <div class="title" style="color:#0f172a;">Nova Entrada de Veículo</div>
-        <div class="subtitle" style="color:#64748b;">Tire a foto do carro para ler a placa automaticamente</div>
+      <div id="viewValetEntrada" style="display: none; background: #1e293b; padding: 20px; border-radius: 16px; border: 1px solid #334155;">
+        <div class="title" style="color:#f8fafc;">Nova Entrada de Veículo</div>
+        <div class="subtitle" style="color:#94a3b8;">Tire a foto do carro para ler a placa automaticamente</div>
 
         <button class="btn-camera" onclick="abrirCamera('carro')">📷 FOTO FRENTE DO CARRO (PLACA)</button>
         <div id="ocrStatus">🔍 Identificando placa...</div>
@@ -247,9 +240,9 @@
       </div>
 
       <!-- PAINEL COMPLETO DE SAÍDA DE CARROS -->
-      <div id="viewValetSaida" style="display: none; background: #fff; padding: 20px; border-radius: 16px;">
-        <div class="title" style="color:#0f172a;">Gestão de Saídas & Pátio</div>
-        <div class="subtitle" style="color:#64748b;">Gerencie os carros no pátio, solicitações e dê baixa manual</div>
+      <div id="viewValetSaida" style="display: none; background: #1e293b; padding: 20px; border-radius: 16px; border: 1px solid #334155;">
+        <div class="title" style="color:#f8fafc;">Gestão de Saídas & Pátio</div>
+        <div class="subtitle" style="color:#94a3b8;">Gerencie os carros no pátio e solicitações com segurança</div>
 
         <div id="bannerAlertaMultisaida" class="alert-banner" style="display: none;">
           🚨 ATENÇÃO: HÁ MÚLTIPLOS CARROS AGUARDANDO SAÍDA!
@@ -260,28 +253,27 @@
           <button class="btn-action-simple btn-blue" onclick="reimprimirUltimoTicket()">🖨️ 2ª VIA DO ÚLTIMO TICKET</button>
         </div>
 
-        <!-- FILTRO DE MÊS, DIA E ANO PARA O PÁTIO -->
         <div class="admin-filter-box">
           <label for="patioDateFilter">📅 Filtrar Veículos no Pátio por Data:</label>
           <input type="date" id="patioDateFilter" onchange="renderizarSaidaECarros()">
         </div>
 
-        <div class="title" style="color:#ef4444; margin-top: 10px; font-size: 1rem; text-align: left;">🚨 Chamados de Saída (Restaurante)</div>
+        <div class="title" style="color:#ef4444; margin-top: 10px; font-size: 1rem; text-align: left;">🚨 Chamados de Saída</div>
         <div id="listaSolicitacoesPendentes" style="margin-bottom: 15px;"></div>
 
-        <div class="title" style="color:#0284c7; margin-top: 10px; font-size: 1rem; text-align: left;">🅿️ Veículos no Pátio (<span id="countCarrosPatio">0</span>)</div>
+        <div class="title" style="color:#38bdf8; margin-top: 10px; font-size: 1rem; text-align: left;">🅿️ Veículos no Pátio (<span id="countCarrosPatio">0</span>)</div>
         <div id="listaCarrosPatio" style="margin-bottom: 15px;"></div>
 
-        <div class="title" style="color:#475569; margin-top: 10px; font-size: 1rem; text-align: left;">✅ Histórico de Saídas Concluídas</div>
+        <div class="title" style="color:#94a3b8; margin-top: 10px; font-size: 1rem; text-align: left;">✅ Histórico de Saídas Concluídas</div>
         <div id="listaCarrosSaidos"></div>
 
         <button class="btn-action-simple btn-gray" style="margin-top: 15px;" onclick="voltarMenuValet()">Voltar ao Menu</button>
       </div>
 
       <!-- MENU ADMIN MANOBRISTA -->
-      <div id="viewValetAdminMenu" style="display: none; background: #fff; padding: 20px; border-radius: 16px;">
-        <div class="title" style="color:#0f172a;">Administração</div>
-        <div class="subtitle" style="color:#64748b;">Configurações e relatórios do sistema</div>
+      <div id="viewValetAdminMenu" style="display: none; background: #1e293b; padding: 20px; border-radius: 16px; border: 1px solid #334155;">
+        <div class="title" style="color:#f8fafc;">Administração</div>
+        <div class="subtitle" style="color:#94a3b8;">Configurações e relatórios do sistema</div>
         <div style="display: flex; flex-direction: column; gap: 10px;">
           <button class="btn-camera btn-warning" onclick="conectarBluetooth()">📶 CONECTAR IMPRESSORA BLUETOOTH</button>
           <button class="btn-action-simple btn-gray" onclick="abrirSubTelaValet('fluxo')">📊 FLUXO DE CARROS</button>
@@ -293,9 +285,9 @@
       </div>
 
       <!-- FLUXO CARROS -->
-      <div id="viewValetFluxo" style="display: none; background: #fff; padding: 20px; border-radius: 16px;">
-        <div class="title" style="color:#0f172a;">Fluxo de Carros (Hoje)</div>
-        <div class="subtitle" style="color:#64748b;">Entradas registradas pela equipe</div>
+      <div id="viewValetFluxo" style="display: none; background: #1e293b; padding: 20px; border-radius: 16px; border: 1px solid #334155;">
+        <div class="title" style="color:#f8fafc;">Fluxo de Carros (Hoje)</div>
+        <div class="subtitle" style="color:#94a3b8;">Entradas registradas pela equipe</div>
         <div class="admin-metrics">
           <div class="metric-box"><div class="metric-title">ENTRADAS HOJE</div><div class="metric-value" id="valetTotalCars">0</div></div>
           <div class="metric-box"><div class="metric-title">AVARIAS NOTIFICADAS</div><div class="metric-value" id="valetTotalAvarias">0</div></div>
@@ -304,37 +296,37 @@
       </div>
 
       <!-- AVARIAS -->
-      <div id="viewValetAvarias" style="display: none; background: #fff; padding: 20px; border-radius: 16px;">
-        <div class="title" style="color:#0f172a;">Relatório de Avarias</div>
-        <div class="subtitle" style="color:#64748b;">Galeria de fotos capturadas na entrada</div>
+      <div id="viewValetAvarias" style="display: none; background: #1e293b; padding: 20px; border-radius: 16px; border: 1px solid #334155;">
+        <div class="title" style="color:#f8fafc;">Relatório de Avarias</div>
+        <div class="subtitle" style="color:#94a3b8;">Galeria de fotos capturadas na entrada</div>
         <div class="gallery-grid" id="galleryAvarias"></div>
         <button class="btn-action-simple btn-gray" style="margin-top:15px;" onclick="abrirSubTelaValet('admin_menu')">Voltar</button>
       </div>
 
-      <!-- ANOTAÇÕES / ARRUMAR NO APP -->
-      <div id="viewValetAnotacoes" style="display: none; background: #fff; padding: 20px; border-radius: 16px;">
-        <div class="title" style="color:#0f172a;">Anotações / Arrumar no App</div>
-        <div class="subtitle" style="color:#64748b;">Registre ajustes, problemas ou ideias para manutenção do sistema.</div>
-        <textarea id="anotacaoAppInput" class="input-field" style="min-height: 120px;" placeholder="Ex.: Ajeitar botão de impressão, trocar cor da tela de saída..."></textarea>
+      <!-- ANOTAÇÕES -->
+      <div id="viewValetAnotacoes" style="display: none; background: #1e293b; padding: 20px; border-radius: 16px; border: 1px solid #334155;">
+        <div class="title" style="color:#f8fafc;">Anotações / Arrumar no App</div>
+        <div class="subtitle" style="color:#94a3b8;">Registre ajustes, problemas ou ideias para manutenção do sistema.</div>
+        <textarea id="anotacaoAppInput" class="input-field" style="min-height: 120px;" placeholder="Ex.: Ajustar sensor de vagas, checar faturamento..."></textarea>
         <button class="btn-action-simple btn-blue" onclick="salvarAnotacaoApp()">💾 SALVAR ANOTAÇÃO</button>
         <div id="listaAnotacoesApp" style="margin-top:15px;"></div>
         <button class="btn-action-simple btn-gray" style="margin-top:15px;" onclick="abrirSubTelaValet('admin_menu')">Voltar</button>
       </div>
 
-      <!-- TABLET RESTAURANTE -->
-      <div id="viewTablet" style="display: none; background: #fff; padding: 20px; border-radius: 16px;">
+      <!-- TABLET RESTAURANTE (ESTILO CUSTOMIZADO - TONS ACONCHEGANTES) -->
+      <div id="viewTablet" style="display: none;">
         
         <div id="screen1" style="display: block;">
-          <div class="title" style="color:#0f172a;">Insira ou Escaneie seu Ticket</div>
-          <div class="subtitle" style="color:#64748b;">Digite o número ou use a câmera para ler a chave/QR Code</div>
+          <div class="title" style="color:#fef3c7;">Insira ou Escaneie seu Ticket</div>
+          <div class="subtitle" style="color:#d97706;">Digite o número ou use a câmera para ler a chave/QR Code</div>
           
           <input type="text" id="ticketInput" class="input-field" placeholder="Ex: 1001" style="text-align: center; font-size: 1.4rem; font-weight: bold;" readonly>
 
-          <button class="btn-camera" style="background-color: #0d9488; margin-bottom: 15px;" onclick="alternarScannerTablet()">
+          <button class="btn-camera" style="background-color: #d97706; margin-bottom: 15px;" onclick="alternarScannerTablet()">
             📷 SCANNER DA CHAVE / QR CODE (TOQUE)
           </button>
 
-          <div id="tabletScannerContainer" style="display: none; margin-bottom: 15px; border: 2px dashed #0d9488; border-radius: 12px; overflow: hidden; padding: 5px;">
+          <div id="tabletScannerContainer" style="display: none; margin-bottom: 15px; border: 2px dashed #f59e0b; border-radius: 12px; overflow: hidden; padding: 5px;">
             <div id="tabletReader"></div>
           </div>
 
@@ -360,86 +352,91 @@
         </div>
 
         <div id="screen2" style="display: none;">
-          <div class="title" style="color:#0f172a;">Local de Retirada</div>
-          <div class="subtitle" style="color:#64748b;">Onde prefere receber seu carro?</div>
+          <div class="title" style="color:#fef3c7;">Local de Retirada</div>
+          <div class="subtitle" style="color:#d97706;">Onde prefere receber seu carro?</div>
           <button class="option-btn selected" onclick="selecionarOpcao(this, 'local')">📍 No Valet</button>
           <button class="option-btn" onclick="selecionarOpcao(this, 'local')">🍽️ Frente do Restaurante</button>
-          <button class="btn-action-simple btn-green" onclick="mostrarTelaTablet(3)">Continuar</button>
+          <button class="btn-action-simple" style="background-color: #d97706;" onclick="mostrarTelaTablet(3)">Continuar</button>
         </div>
 
         <div id="screen3" style="display: none;">
-          <div class="title" style="color:#0f172a;">Tempo de Retirada</div>
-          <div class="subtitle" style="color:#64748b;">Quando você pretende buscar?</div>
+          <div class="title" style="color:#fef3c7;">Tempo de Retirada</div>
+          <div class="subtitle" style="color:#d97706;">Quando você pretende buscar?</div>
           <button class="option-btn selected" onclick="selecionarOpcao(this, 'tempo')">⏱️ 3 Minutos</button>
           <button class="option-btn" onclick="selecionarOpcao(this, 'tempo')">⏱️ 5 Minutos</button>
           <button class="option-btn" onclick="selecionarOpcao(this, 'tempo')">⏱️ 10 Minutos</button>
-          <button class="btn-action-simple btn-green" onclick="mostrarTelaTablet(4)">Continuar</button>
+          <button class="btn-action-simple" style="background-color: #d97706;" onclick="mostrarTelaTablet(4)">Continuar</button>
         </div>
 
-        <!-- TELA 4: ESCOLHA DE PAGAMENTO (CARTÃO OU PIX) -->
+        <!-- TELA 4: PAGAMENTO -->
         <div id="screen4" style="display: none;">
-          <div class="title" style="color:#0f172a;">Forma de Pagamento</div>
-          <div class="subtitle" style="color:#64748b;">Como deseja realizar o pagamento?</div>
+          <div class="title" style="color:#fef3c7;">Forma de Pagamento</div>
+          <div class="subtitle" style="color:#d97706;">Como deseja realizar o pagamento?</div>
           
           <button class="option-btn selected" onclick="selecionarOpcao(this, 'pagamento')">💳 Passar o Cartão (Manobrista traz a maquininha)</button>
           <button class="option-btn" onclick="selecionarOpcao(this, 'pagamento')">⚡ Pagar via Pix</button>
           
-          <button class="btn-action-simple btn-green" style="margin-top: 15px;" onclick="avancarAposEscolhaPagamento()">Continuar</button>
+          <button class="btn-action-simple" style="background-color: #d97706; margin-top: 15px;" onclick="avancarAposEscolhaPagamento()">Continuar</button>
         </div>
 
-        <!-- TELA 5: PIX (CASO SELECIONADO) -->
+        <!-- TELA 5: PIX -->
         <div id="screen5" style="display: none;">
-          <div class="title" style="color:#0f172a;">Pagamento via Pix</div>
+          <div class="title" style="color:#fef3c7;">Pagamento via Pix Seguro</div>
           
           <div id="pixPaymentSection">
             <div class="qr-container">
               <div class="price">R$ 35,00</div>
-              <div id="pixLoading" style="color: #64748b; font-size: 0.9rem; padding: 20px;">⚡ Gerando QR Code oficial do Pix...</div>
+              <div id="pixLoading" style="color: #d97706; font-size: 0.9rem; padding: 20px;">⚡ Gerando QR Code oficial...</div>
               <img id="qrCodeImg" src="" alt="QR Code Pix" class="qr-code" style="display: none;">
-              <p style="font-size: 0.75rem; color: #64748b; margin-top: 8px;" id="pixDesc">Escaneie o código com o aplicativo do seu banco</p>
+              <p style="font-size: 0.75rem; color: #d97706; margin-top: 8px;">Escaneie o código com o aplicativo do seu banco</p>
               
               <button class="btn-copy-pix" id="btnCopyPix" style="display: none;" onclick="copiarPixCopiaECola()">📋 Copiar Pix Copia e Cola</button>
-              
-              <button class="btn-action-simple btn-blue" id="btnPrintComprovantePix" style="display: none; margin-top: 10px;" onclick="imprimirComprovantePixCliente()">🖨️ Imprimir Comprovante Pix</button>
+              <button class="btn-action-simple" id="btnPrintComprovantePix" style="display: none; margin-top: 10px; background-color: #78350f;" onclick="imprimirComprovantePixCliente()">🖨️ Imprimir Comprovante Pix</button>
             </div>
 
             <div class="status-msg" id="statusMsg" style="display: none;">
-              ⏳ Aguardando confirmação do banco...
+              ⏳ Aguardando confirmação...
             </div>
           </div>
 
           <button class="btn-action-simple btn-gray" style="margin-top: 10px;" onclick="mostrarTelaTablet(4)">Voltar</button>
         </div>
 
-        <!-- TELA DE CONFIRMAÇÃO FINAL -->
+        <!-- CONFIRMAÇÃO FINAL -->
         <div id="screenConfirmation" style="display: none;" class="confirmation-card">
           <div class="success-icon">✓</div>
-          <div style="font-size: 1.4rem; font-weight: bold; color: #166534; margin-bottom: 6px;">SOLICITAÇÃO ENVIADA!</div>
-          <p style="font-size: 0.95rem; color: #15803d; margin-bottom: 12px;">Seu veículo foi solicitado! O manobrista já foi notificado.</p>
+          <div style="font-size: 1.4rem; font-weight: bold; color: #fef3c7; margin-bottom: 6px;">SOLICITAÇÃO ENVIADA!</div>
+          <p style="font-size: 0.95rem; color: #fde68a; margin-bottom: 12px;">Seu veículo foi solicitado! O manobrista já foi notificado.</p>
           
-          <div style="background-color: #ffffff; padding: 12px; border-radius: 10px; text-align: left; margin-bottom: 15px; border: 1px solid #bbf7d0;">
-            <p style="font-size: 0.85rem; color: #334155;"><strong>Ticket:</strong> <span id="confirmTicketNum"></span></p>
-            <p style="font-size: 0.85rem; color: #334155;"><strong>Local de Entrega:</strong> <span id="confirmLocal"></span></p>
-            <p style="font-size: 0.85rem; color: #334155;"><strong>Previsão de Chegada:</strong> <span id="confirmTempo"></span></p>
-            <p style="font-size: 0.85rem; color: #334155;"><strong>Forma de Pagamento:</strong> <span id="confirmPagamento"></span></p>
+          <div style="background-color: #2d2118; padding: 12px; border-radius: 10px; text-align: left; margin-bottom: 15px; border: 1px solid #5c3d22;">
+            <p style="font-size: 0.85rem; color: #fef3c7;"><strong>Ticket:</strong> <span id="confirmTicketNum"></span></p>
+            <p style="font-size: 0.85rem; color: #fef3c7;"><strong>Local de Entrega:</strong> <span id="confirmLocal"></span></p>
+            <p style="font-size: 0.85rem; color: #fef3c7;"><strong>Previsão de Chegada:</strong> <span id="confirmTempo"></span></p>
+            <p style="font-size: 0.85rem; color: #fef3c7;"><strong>Forma de Pagamento:</strong> <span id="confirmPagamento"></span></p>
           </div>
 
-          <p style="font-size: 0.8rem; color: #166534; font-weight: bold;">Retornando à tela inicial em <span id="timerCountdown">4</span>s...</p>
-          <button class="btn-action-simple btn-blue" style="margin-top: 15px; padding: 10px;" onclick="resetarETornارTela1()">🏠 Voltar Imediatamente</button>
+          <p style="font-size: 0.8rem; color: #fde68a; font-weight: bold;">Retornando à tela inicial em <span id="timerCountdown">4</span>s...</p>
+          <button class="btn-action-simple" style="margin-top: 15px; padding: 10px; background-color: #b45309;" onclick="resetarETornarTela1()">🏠 Voltar Imediatamente</button>
         </div>
       </div>
 
-      <!-- ADMIN GENERAL (TELA DO ADMINISTRADOR COM GRÁFICOS E LOG) -->
-      <div id="viewAdmin" style="display: none; background: #fff; padding: 20px; border-radius: 16px;">
-        <div class="title" style="color:#0f172a;">Painel Geral do Administrador</div>
-        <div class="subtitle" style="color:#64748b;">Controle exclusivo, faturamento e gráficos de andamento</div>
+      <!-- ADMIN GENERAL -->
+      <div id="viewAdmin" style="display: none; background: #1e293b; padding: 20px; border-radius: 16px; border: 1px solid #334155;">
+        <div class="title" style="color:#f8fafc;">Painel Geral do Administrador</div>
+        <div class="subtitle" style="color:#94a3b8;">Controle exclusivo, faturamento antifraude e gráficos de andamento</div>
 
-        <!-- FILTRO DE DATA COM OPÇÃO DE IMPRIMIR O FECHAMENTO DO DIA -->
+        <!-- NOVO BOTÃO DE ACESSO AS VAGAS DOS SENSORES -->
+        <div style="margin-bottom: 15px;">
+          <button class="btn-action-simple btn-blue" style="background-color: #0d9488; font-size: 1.05rem;" onclick="abrirTelaSensoresVagas()">
+            📡 GESTÃO DE VAGAS E SENSORES
+          </button>
+        </div>
+
         <div class="admin-filter-box">
           <label for="adminDateFilter">📅 Selecionar Data do Fechamento / Log:</label>
           <input type="date" id="adminDateFilter" onchange="renderizarAdmin()">
           <button class="btn-action-simple btn-green" style="margin-top: 10px;" onclick="imprimirFechamentoCaixa()">
-            🖨️ IMPRIMIR FECHAMENTO DO DIA
+            🖨️ IMPRIMIR FECHAMENTO DO DIA (AUDITORIA)
           </button>
         </div>
 
@@ -448,14 +445,14 @@
           <div class="metric-box"><div class="metric-title">TOTAL VEÍCULOS</div><div class="metric-value" id="totalCars">0</div></div>
         </div>
 
-        <!-- GRÁFICO DE ANDAMENTO DA OPERAÇÃO POR DIAS -->
+        <!-- GRÁFICO DE ANDAMENTO -->
         <div class="admin-chart-container">
-          <div style="font-size: 0.85rem; font-weight: bold; color: #0f172a; margin-bottom: 8px;">📊 Andamento da Operação por Dias (Últimos Dias)</div>
+          <div style="font-size: 0.85rem; font-weight: bold; color: #f8fafc; margin-bottom: 8px;">📊 Andamento da Operação por Dias</div>
           <div id="adminDaysChart"></div>
         </div>
 
-        <!-- LOG DETALHADO DA OPERAÇÃO -->
-        <div class="title" style="margin-top: 15px; font-size: 0.95rem; color:#0f172a; text-align: left;">📋 Log Detalhado de Operações</div>
+        <!-- LOG DETALHADO -->
+        <div class="title" style="margin-top: 15px; font-size: 0.95rem; color:#f8fafc; text-align: left;">📋 Log Detalhado (Controle Caixa 2)</div>
         <div style="overflow-x: auto; margin-top: 8px;">
           <table class="admin-table">
             <thead>
@@ -472,10 +469,30 @@
           </table>
         </div>
 
-        <div class="title" style="margin-top: 25px; font-size: 1rem; color:#0f172a;">📸 Fotos de Entradas Recentes</div>
+        <div class="title" style="margin-top: 25px; font-size: 1rem; color:#f8fafc;">📸 Fotos de Entradas Recentes</div>
         <div class="gallery-grid" id="adminGalleryGrid" style="margin-top: 10px;"></div>
 
         <button class="btn-action-simple btn-gray" style="margin-top:20px;" onclick="voltarMenuValet()">Voltar para Valet</button>
+      </div>
+
+      <!-- TELA DE GESTÃO DE VAGAS E SENSORES -->
+      <div id="viewSensoresVagas" style="display: none; background: #1e293b; padding: 20px; border-radius: 16px; border: 1px solid #334155;">
+        <div class="title" style="color:#38bdf8;">📡 Sensores & Vagas em Tempo Real</div>
+        <div class="subtitle" style="color:#94a3b8;">Monitoramento e detalhes de ocupação por vaga</div>
+
+        <div class="admin-metrics" style="margin-bottom: 15px;">
+          <div class="metric-box"><div class="metric-title">VAGAS LIVRES</div><div class="metric-value" id="vagasLivresCount" style="color: #34d399;">0</div></div>
+          <div class="metric-box"><div class="metric-title">VAGAS OCUPADAS</div><div class="metric-value" id="vagasOcupadasCount" style="color: #ef4444;">0</div></div>
+        </div>
+
+        <div style="margin-bottom: 15px; display: flex; gap: 8px;">
+          <button class="btn-action-simple btn-green" style="padding: 10px; font-size: 0.85rem;" onclick="adicionarNovaVagaSensor()">➕ Adicionar Nova Vaga</button>
+          <button class="btn-action-simple btn-blue" style="padding: 10px; font-size: 0.85rem;" onclick="renderizarSensoresVagas()">🔄 Atualizar Status</button>
+        </div>
+
+        <div id="listaVagasSensoresContainer" style="display: flex; flex-direction: column; gap: 10px; margin-bottom: 15px;"></div>
+
+        <button class="btn-action-simple btn-gray" onclick="voltarParaAdmin()">Voltar ao Painel Admin</button>
       </div>
 
     </div>
@@ -517,12 +534,8 @@
   </div>
 
   <script>
-    localStorage.removeItem('unidos_park_ticket_seq');
-    localStorage.removeItem('unidos_park_data');
-    localStorage.removeItem('unidos_park_anotacoes');
-
-    var contadorTickets = 1000;
-    var historicoTransacoes = [];
+    var contadorTickets = parseInt(localStorage.getItem('unidos_park_ticket_seq') || '1000');
+    var historicoTransacoes = JSON.parse(localStorage.getItem('unidos_park_data') || '[]');
     var bluetoothDevice = null;
 
     var tempCarroImg = '';
@@ -536,10 +549,7 @@
     var tipoFotoAtual = '';
     var html5QrcodeTablet = null;
     
-    var currentPaymentId = null;
-    var paymentPollInterval = null;
     var currentPixCopiaECola = '';
-
     window.timerRetornoInicio = null;
 
     document.addEventListener("DOMContentLoaded", function() {
@@ -553,7 +563,125 @@
         var hoje = new Date().toISOString().split('T')[0];
         patioFilter.value = hoje;
       }
+      inicializarVagasPadraoSeNecessario();
     });
+
+    function inicializarVagasPadraoSeNecessario() {
+      var vagasSalvas = localStorage.getItem('unidos_park_vagas_sensores');
+      if (!vagasSalvas) {
+        var vagasIniciais = [
+          { id: 'V01', tipo: 'Carro Padrão', status: 'Livre', placa: '', atualizado: 'Agora' },
+          { id: 'V02', tipo: 'SUV / Grande', status: 'Livre', placa: '', atualizado: 'Agora' },
+          { id: 'V03', tipo: 'Carro Padrão', status: 'Manutenção', placa: '', atualizado: 'Hoje' },
+          { id: 'V04', tipo: 'Vip / Elétrico', status: 'Livre', placa: '', atualizado: 'Agora' }
+        ];
+        localStorage.setItem('unidos_park_vagas_sensores', JSON.stringify(vagasIniciais));
+      }
+    }
+
+    function abrirTelaSensoresVagas() {
+      document.getElementById('viewAdmin').style.display = 'none';
+      document.getElementById('viewSensoresVagas').style.display = 'block';
+      renderizarSensoresVagas();
+    }
+
+    function voltarParaAdmin() {
+      document.getElementById('viewSensoresVagas').style.display = 'none';
+      document.getElementById('viewAdmin').style.display = 'block';
+      renderizarAdmin();
+    }
+
+    function renderizarSensoresVagas() {
+      var container = document.getElementById('listaVagasSensoresContainer');
+      var vagas = JSON.parse(localStorage.getItem('unidos_park_vagas_sensores') || '[]');
+      
+      var livres = vagas.filter(v => v.status === 'Livre').length;
+      var ocupadas = vagas.filter(v => v.status === 'Ocupada').length;
+
+      document.getElementById('vagasLivresCount').innerText = livres;
+      document.getElementById('vagasOcupadasCount').innerText = ocupadas;
+
+      if (vagas.length === 0) {
+        container.innerHTML = '<p style="text-align:center; color:#94a3b8; padding: 15px;">Nenhuma vaga cadastrada.</p>';
+        return;
+      }
+
+      var html = '';
+      vagas.forEach(function(vaga, idx) {
+        var corBorda = vaga.status === 'Ocupada' ? '#ef4444' : (vaga.status === 'Livre' ? '#059669' : '#d97706');
+        var badgeCor = vaga.status === 'Ocupada' ? 'badge-pending' : (vaga.status === 'Livre' ? 'badge-done' : 'badge-auto');
+
+        html += `
+          <div class="ticket-card" style="border-left-color: ${corBorda};">
+            <div class="ticket-header">
+              <span>📍 Vaga: <strong>${vaga.id}</strong> (${vaga.tipo})</span>
+              <span class="badge-status ${badgeCor}">${vaga.status.toUpperCase()}</span>
+            </div>
+            <div class="ticket-detail"><strong>Placa Atual:</strong> ${vaga.placa ? vaga.placa : 'Nenhuma (Vaga livre)'}</div>
+            <div class="ticket-detail"><strong>Sensor / Atualização:</strong> ${vaga.atualizado || 'Em tempo real'}</div>
+            
+            <div style="margin-top: 10px; display: flex; gap: 6px; flex-wrap: wrap;">
+              <button class="btn-action-simple btn-green" style="flex: 1; padding: 6px; font-size: 0.75rem;" onclick="mudarStatusVagaSensor(${idx}, 'Livre')">🟢 Livre</button>
+              <button class="btn-action-simple btn-red" style="flex: 1; padding: 6px; font-size: 0.75rem;" onclick="mudarStatusVagaSensor(${idx}, 'Ocupada')">🔴 Ocupar</button>
+              <button class="btn-action-simple btn-blue" style="flex: 1; padding: 6px; font-size: 0.75rem;" onclick="vincularPlacaVagaSensor(${idx})">🔗 Vincular Placa</button>
+              <button class="btn-delete-item" onclick="removerVagaSensor(${idx})">🗑️</button>
+            </div>
+          </div>
+        `;
+      });
+      container.innerHTML = html;
+    }
+
+    function mudarStatusVagaSensor(index, novoStatus) {
+      var vagas = JSON.parse(localStorage.getItem('unidos_park_vagas_sensores') || '[]');
+      if (vagas[index]) {
+        vagas[index].status = novoStatus;
+        if (novoStatus === 'Livre') {
+          vagas[index].placa = '';
+        }
+        vagas[index].atualizado = new Date().toLocaleTimeString('pt-BR', {hour:'2-digit', minute:'2-digit'});
+        localStorage.setItem('unidos_park_vagas_sensores', JSON.stringify(vagas));
+        renderizarSensoresVagas();
+      }
+    }
+
+    function vincularPlacaVagaSensor(index) {
+      var vagas = JSON.parse(localStorage.getItem('unidos_park_vagas_sensores') || '[]');
+      var placaInput = prompt("Digite a placa do veículo para vincular a esta vaga:", vagas[index].placa || '');
+      if (placaInput !== null) {
+        vagas[index].placa = placaInput.toUpperCase().trim();
+        vagas[index].status = vagas[index].placa ? 'Ocupada' : 'Livre';
+        vagas[index].atualizado = new Date().toLocaleTimeString('pt-BR', {hour:'2-digit', minute:'2-digit'});
+        localStorage.setItem('unidos_park_vagas_sensores', JSON.stringify(vagas));
+        renderizarSensoresVagas();
+      }
+    }
+
+    function adicionarNovaVagaSensor() {
+      var idVaga = prompt("Identificação da nova vaga (Ex: V05, B12):");
+      if (!idVaga) return;
+      var tipoVaga = prompt("Tipo de vaga (Ex: Carro Padrão, SUV, VIP):", "Carro Padrão");
+
+      var vagas = JSON.parse(localStorage.getItem('unidos_park_vagas_sensores') || '[]');
+      vagas.push({
+        id: idVaga.toUpperCase(),
+        tipo: tipoVaga || 'Carro Padrão',
+        status: 'Livre',
+        placa: '',
+        atualizado: 'Agora'
+      });
+      localStorage.setItem('unidos_park_vagas_sensores', JSON.stringify(vagas));
+      renderizarSensoresVagas();
+    }
+
+    function removerVagaSensor(index) {
+      if (confirm("Deseja realmente remover esta vaga do sistema de sensores?")) {
+        var vagas = JSON.parse(localStorage.getItem('unidos_park_vagas_sensores') || '[]');
+        vagas.splice(index, 1);
+        localStorage.setItem('unidos_park_vagas_sensores', JSON.stringify(vagas));
+        renderizarSensoresVagas();
+      }
+    }
 
     function digitarNumpad(valor) {
       var field = document.getElementById('ticketInput');
@@ -606,7 +734,7 @@
         atualizarBadgeAvisos();
       } else if (perfil === 'admin') {
         document.getElementById('appTitle').innerText = 'Administração';
-        document.getElementById('appSub').innerText = 'Log de Operações e Gráficos';
+        document.getElementById('appSub').innerText = 'Log de Operações e Auditoria';
         document.getElementById('progressBg').style.display = 'none';
         document.getElementById('viewAdmin').style.display = 'block';
         
@@ -619,7 +747,6 @@
     }
 
     function fazerLogout() {
-      pararMonitoramentoPagamento();
       if (window.timerRetornoInicio) {
         clearInterval(window.timerRetornoInicio);
         window.timerRetornoInicio = null;
@@ -634,6 +761,7 @@
       document.getElementById('viewValetAvarias').style.display = 'none';
       document.getElementById('viewValetAnotacoes').style.display = 'none';
       document.getElementById('viewAdmin').style.display = 'none';
+      document.getElementById('viewSensoresVagas').style.display = 'none';
       document.getElementById('btnLogout').style.display = 'none';
       document.getElementById('progressBg').style.display = 'none';
 
@@ -650,6 +778,7 @@
       document.getElementById('viewValetAvarias').style.display = 'none';
       document.getElementById('viewValetAnotacoes').style.display = 'none';
       document.getElementById('viewAdmin').style.display = 'none';
+      document.getElementById('viewSensoresVagas').style.display = 'none';
 
       if (sub === 'entrada') {
         document.getElementById('viewValetEntrada').style.display = 'block';
@@ -699,7 +828,7 @@
         });
         video.srcObject = mediaStream;
       } catch (err) {
-        alert("Não foi possível acessar a câmera: Certifique-se de estar rodando em HTTPS ou ambiente seguro.");
+        alert("Não foi possível acessar a câmera.");
         fecharCamera();
       }
     }
@@ -768,7 +897,7 @@
           }
         }
       } catch (err) {
-        console.warn('Falha no processamento OCR:', err);
+        console.warn('Falha OCR:', err);
       } finally {
         if (statusEl) statusEl.style.display = 'none';
       }
@@ -910,7 +1039,7 @@
         <p><strong>Entrada:</strong> ${reg.dataHora}</p>
         <p><strong>Saída:</strong> ${horaSaidaAtual}</p>
         <p><strong>Valor Total:</strong> R$ ${reg.valor ? reg.valor.toFixed(2) : '35,00'}</p>
-        <p><strong>Status:</strong> COMPROVANTE DE ENTREGA</p>
+        <p><strong>Status:</strong> COMPROVANTE DE ENTREGA SEGURO</p>
       `;
 
       imprimirTicketLocal(reg.ticket, new Date().toLocaleDateString('pt-BR') + ' ' + horaSaidaAtual, null, "COMPROVANTE DE ENTREGA", htmlDetalhes, "Obrigado pela preferência!");
@@ -919,7 +1048,7 @@
     function imprimirComprovantePixCliente() {
       var htmlDetalhes = `
         <p><strong>Serviço:</strong> Valet Unidos Park</p>
-        <p><strong>Forma de Pagamento:</strong> PIX</p>
+        <p><strong>Forma de Pagamento:</strong> PIX SEGURO</p>
         <p><strong>Valor:</strong> R$ 35,00</p>
         <p><strong>Status:</strong> PAGO VIA PIX</p>
       `;
@@ -954,10 +1083,10 @@
         <p><strong>Total de Veículos:</strong> ${count}</p>
         <p><strong>Faturamento Total:</strong> R$ ${total.toFixed(2)}</p>
         <p>---------------------------</p>
-        <p style="font-size: 10px;">Relatório gerado em: ${new Date().toLocaleDateString('pt-BR')} ${new Date().toLocaleTimeString('pt-BR')}</p>
+        <p style="font-size: 10px;">Relatório Antifraude gerado em: ${new Date().toLocaleDateString('pt-BR')} ${new Date().toLocaleTimeString('pt-BR')}</p>
       `;
 
-      imprimirTicketLocal("CAIXA", dataFormatada, null, "FECHAMENTO DE CAIXA", htmlCaixa, "Relatório do Administrador");
+      imprimirTicketLocal("CAIXA", dataFormatada, null, "FECHAMENTO DE CAIXA SEGURO", htmlCaixa, "Auditoria do Administrador");
     }
 
     async function conectarBluetooth() {
@@ -1031,19 +1160,9 @@
               status: 'CONCLUIDO',
               horaEntrega: horaEntrega
             });
-          } else {
-            var snapshot = await db.ref('solicitacoes_saida').once('value');
-            snapshot.forEach(function(child) {
-              if (String(child.val().ticket) === String(ticketNum)) {
-                child.ref.update({
-                  status: 'CONCLUIDO',
-                  horaEntrega: horaEntrega
-                });
-              }
-            });
           }
         } catch(e) {
-          console.warn('Erro ao sincronizar baixa com Firebase:', e);
+          console.warn('Erro Firebase:', e);
         }
       }
 
@@ -1059,9 +1178,9 @@
     }
 
     async function cancelarChamadoOuCarro(ticketNum) {
-      var pass = prompt("Informe a senha de Administrador para apagar/cancelar o carro:");
+      var pass = prompt("Informe a senha de Administrador para apagar/cancelar o carro (Proteção Caixa 2):");
       if (pass !== 'admin') {
-        if (pass !== null) alert("Senha inválida! Ação cancelada.");
+        if (pass !== null) alert("Senha inválida! Ação bloqueada.");
         return;
       }
       excluirRegistroCarro(ticketNum);
@@ -1079,17 +1198,9 @@
             var db = firebase.database();
             if (reg.requestId) {
               await db.ref('solicitacoes_saida/' + reg.requestId).remove();
-            } else {
-              db.ref('solicitacoes_saida').once('value', function(snapshot) {
-                snapshot.forEach(function(child) {
-                  if (String(child.val().ticket) === String(ticketNum)) {
-                    child.ref.remove();
-                  }
-                });
-              });
             }
           } catch (e) {
-            console.warn('Erro ao deletar item no Firebase:', e);
+            console.warn('Erro Firebase:', e);
           }
         }
 
@@ -1129,9 +1240,7 @@
       }
 
       if (pendentes.length >= 2) {
-        try {
-          document.getElementById('alertSound').play();
-        } catch(e){}
+        try { document.getElementById('alertSound').play(); } catch(e){}
       }
     }
 
@@ -1177,7 +1286,7 @@
       }
 
       if (pendentes.length === 0) {
-        containerPendentes.innerHTML = '<p style="text-align: center; color: #94a3b8; padding: 8px; background: #f8fafc; border-radius: 8px; font-size: 0.85rem;">Nenhum chamado de saída pendente.</p>';
+        containerPendentes.innerHTML = '<p style="text-align: center; color: #94a3b8; padding: 8px; background: #0f172a; border-radius: 8px; font-size: 0.85rem; border: 1px solid #334155;">Nenhum chamado de saída pendente.</p>';
       } else {
         var htmlP = '';
         pendentes.forEach(function(item) {
@@ -1207,7 +1316,7 @@
       }
 
       if (carrosPatio.length === 0) {
-        containerPatio.innerHTML = '<p style="text-align: center; color: #94a3b8; padding: 10px; background: #f8fafc; border-radius: 8px;">Nenhum veículo estacionado para a data selecionada.</p>';
+        containerPatio.innerHTML = '<p style="text-align: center; color: #94a3b8; padding: 10px; background: #0f172a; border-radius: 8px; border: 1px solid #334155;">Nenhum veículo estacionado para a data selecionada.</p>';
       } else {
         var htmlPatio = '';
         carrosPatio.slice().reverse().forEach(function(item) {
@@ -1249,7 +1358,7 @@
       }
 
       if (carrosSaidos.length === 0) {
-        containerSaidos.innerHTML = '<p style="text-align: center; color: #94a3b8; padding: 10px; background: #f8fafc; border-radius: 8px; font-size: 0.85rem;">Nenhuma saída realizada.</p>';
+        containerSaidos.innerHTML = '<p style="text-align: center; color: #94a3b8; padding: 10px; background: #0f172a; border-radius: 8px; border: 1px solid #334155;">Nenhuma saída realizada.</p>';
       } else {
         var htmlSaidos = '';
         carrosSaidos.slice().reverse().forEach(function(item) {
@@ -1306,7 +1415,7 @@
           <div class="gallery-card">
             <img src="${item.fotoAvaria}" onclick="visualizarFotoModal('${item.fotoAvaria}', 'Avaria Ticket ${item.ticket}', '${item.obsAvaria}')">
             <strong>Ticket ${item.ticket} ${item.placa ? `[${item.placa}]` : ''}</strong><br>
-            <span style="color:#64748b;">${item.obsAvaria || 'Sem descrição'}</span>
+            <span style="color:#94a3b8;">${item.obsAvaria || 'Sem descrição'}</span>
           </div>
         `;
       });
@@ -1324,8 +1433,6 @@
 
       var html = '';
       var galleryHtml = '';
-
-      // Agregador por dia para construir o gráfico interativo
       var mapDias = {};
 
       historicoTransacoes.forEach(function(item) {
@@ -1378,7 +1485,7 @@
             <div class="gallery-card">
               <img src="${item.fotoCarro}" onclick="visualizarFotoModal('${item.fotoCarro}', 'Foto do Carro - Ticket ${item.ticket}', 'Entrada: ${item.dataHora}')">
               <strong>Ticket ${item.ticket} ${item.placa ? `[${item.placa}]` : ''}</strong><br>
-              <span style="color:#64748b;">Veículo no pátio</span>
+              <span style="color:#94a3b8;">Veículo no pátio</span>
             </div>
           `;
         }
@@ -1389,7 +1496,6 @@
       tbody.innerHTML = html || '<tr><td colspan="6" style="padding:15px; color:#94a3b8;">Nenhum registro encontrado para esta data</td></tr>';
       adminGallery.innerHTML = galleryHtml || '<p style="grid-column: span 2; text-align:center; color:#94a3b8;">Nenhuma foto capturada nesta data.</p>';
 
-      // Renderizar gráfico de andamento por dias
       var chartContainer = document.getElementById('adminDaysChart');
       var keysDias = Object.keys(mapDias);
       if (keysDias.length === 0) {
@@ -1447,37 +1553,25 @@
         timestamp: Date.now()
       };
 
-      if (typeof firebase !== 'undefined' && firebase.database) {
-        firebase.database().ref('anotacoes_app').push(anotacao).then(function() {
-          input.value = '';
-        }).catch(function() {
-          alert('Erro ao salvar na nuvem.');
-        });
-      } else {
-        var lista = JSON.parse(localStorage.getItem('unidos_park_anotacoes') || '[]');
-        lista.unshift(anotacao);
-        localStorage.setItem('unidos_park_anotacoes', JSON.stringify(lista));
-        input.value = '';
-        renderizarAnotacoesApp();
-      }
+      var lista = JSON.parse(localStorage.getItem('unidos_park_anotacoes') || '[]');
+      lista.unshift(anotacao);
+      localStorage.setItem('unidos_park_anotacoes', JSON.stringify(lista));
+      input.value = '';
+      renderizarAnotacoesApp();
     }
 
-    function apagarAnotacaoApp(idAnotacao, indexLocal) {
+    function apagarAnotacaoApp(indexLocal) {
       var pass = prompt("Informe a senha de Administrador para apagar a anotação:");
       if (pass !== 'admin') {
         if (pass !== null) alert("Senha inválida!");
         return;
       }
 
-      if (typeof firebase !== 'undefined' && firebase.database && idAnotacao) {
-        firebase.database().ref('anotacoes_app/' + idAnotacao).remove();
-      } else {
-        var lista = JSON.parse(localStorage.getItem('unidos_park_anotacoes') || '[]');
-        if (indexLocal !== undefined && indexLocal >= 0) {
-          lista.splice(indexLocal, 1);
-          localStorage.setItem('unidos_park_anotacoes', JSON.stringify(lista));
-          renderizarAnotacoesApp();
-        }
+      var lista = JSON.parse(localStorage.getItem('unidos_park_anotacoes') || '[]');
+      if (indexLocal !== undefined && indexLocal >= 0) {
+        lista.splice(indexLocal, 1);
+        localStorage.setItem('unidos_park_anotacoes', JSON.stringify(lista));
+        renderizarAnotacoesApp();
       }
     }
 
@@ -1486,22 +1580,21 @@
       if (!container) return;
       var lista = JSON.parse(localStorage.getItem('unidos_park_anotacoes') || '[]');
       if (lista.length === 0) {
-        container.innerHTML = '<p style="text-align:center;color:#94a3b8;padding:10px;background:#f8fafc;border-radius:8px;">Nenhuma anotação cadastrada.</p>';
+        container.innerHTML = '<p style="text-align:center;color:#94a3b8;padding:10px;background:#0f172a;border-radius:8px;border:1px solid #334155;">Nenhuma anotação cadastrada.</p>';
         return;
       }
 
-      container.innerHTML = lista.slice().sort(function(a,b){return (b.timestamp||0)-(a.timestamp||0);}).map(function(a, idx){
+      container.innerHTML = lista.map(function(a, idx){
         var texto = String(a.texto || '').replace(/[&<>]/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;'}[c]; });
-        var keyParam = a.id ? `'${a.id}'` : 'null';
         return `
-          <div class="ticket-card" style="border-left-color:#2563eb; position: relative;">
+          <div class="ticket-card" style="border-left-color:#38bdf8; position: relative;">
             <div class="ticket-header">
               <span>📝 Anotação</span>
               <span class="badge-status badge-auto">${a.dataHora||''}</span>
             </div>
-            <div class="ticket-detail" style="white-space:pre-wrap;color:#0f172a; margin-bottom: 8px;">${texto}</div>
+            <div class="ticket-detail" style="white-space:pre-wrap;color:#f8fafc; margin-bottom: 8px;">${texto}</div>
             <div style="text-align: right;">
-              <button class="btn-delete-item" onclick="apagarAnotacaoApp(${keyParam}, ${idx})">🗑️ Apagar</button>
+              <button class="btn-delete-item" onclick="apagarAnotacaoApp(${idx})">🗑️ Apagar</button>
             </div>
           </div>
         `;
@@ -1528,7 +1621,7 @@
             },
             function(err) {}
           ).catch(function(err) {
-            alert("A câmera necessita de permissão ou HTTPS ativo.");
+            alert("A câmera necessita de permissão.");
             fecharScannerTablet();
           });
         } catch(e) {
@@ -1580,8 +1673,6 @@
       if (tela === 5) {
         document.getElementById('pixPaymentSection').style.display = 'block';
         gerarPixOficialMercadoPago();
-      } else {
-        pararMonitoramentoPagamento();
       }
     }
 
@@ -1662,8 +1753,8 @@
       if (!btnConfirmar) {
         btnConfirmar = document.createElement('button');
         btnConfirmar.id = 'btnConfirmarPagamento';
-        btnConfirmar.innerHTML = `✅ Já paguei / Confirmar Pagamento`;
-        btnConfirmar.style.backgroundColor = "#28a745";
+        btnConfirmar.innerHTML = `✅ Confirmar Pagamento Pix`;
+        btnConfirmar.style.backgroundColor = "#d97706";
         btnConfirmar.style.color = "white";
         btnConfirmar.style.padding = "12px";
         btnConfirmar.style.border = "none";
@@ -1672,7 +1763,7 @@
         btnConfirmar.style.width = "100%";
         btnConfirmar.style.marginTop = "15px";
         btnConfirmar.style.cursor = "pointer";
-        btnConfirmar.onclick = confirmarPagamentoManual;
+        btnConfirmar.onclick = confirmarPagamentoSucesso;
         
         btnCopyPix.parentNode.insertBefore(btnConfirmar, btnCopyPix.nextSibling);
       } else {
@@ -1687,18 +1778,7 @@
       }
     }
 
-    function confirmarPagamentoManual() {
-      confirmarPagamentoSucesso();
-    }
-
-    function pararMonitoramentoPagamento() {
-      if (paymentPollInterval) {
-        clearInterval(paymentPollInterval);
-        paymentPollInterval = null;
-      }
-    }
-
-    function resetarETornارTela1() {
+    function resetarETornarTela1() {
       if (window.timerRetornoInicio) {
         clearInterval(window.timerRetornoInicio);
         window.timerRetornoInicio = null;
@@ -1723,9 +1803,7 @@
     }
 
     function confirmarPagamentoSucesso() {
-      try {
-        document.getElementById('beepSuccess').play();
-      } catch(e){}
+      try { document.getElementById('beepSuccess').play(); } catch(e){}
 
       var optLocal = document.querySelector('#screen2 .option-btn.selected');
       var optTempo = document.querySelector('#screen3 .option-btn.selected');
@@ -1741,10 +1819,6 @@
         tempo: tempoTablet,
         pagamento: pagamentoTablet
       };
-
-      if (typeof enviarSolicitacaoSaida === 'function') {
-        enviarSolicitacaoSaida(payloadSaida);
-      }
 
       registrarPedidoSaida(payloadSaida);
 
@@ -1777,61 +1851,6 @@
           resetarETornarTela1();
         }
       }, 1000);
-    }
-  </script>
-
-  <!-- FIREBASE REALTIME DATABASE -->
-  <script>
-    const firebaseConfigRTDB = {
-      apiKey: "AIzaSyDNZ1rN5v2-6XdUGAokSvdBu0-X-4A",
-      authDomain: "valet-car.firebaseapp.com",
-      databaseURL: "https://valet-car-default-rtdb.firebaseio.com",
-      projectId: "valet-car",
-      storageBucket: "valet-car.firebasestorage.app",
-      messagingSenderId: "681029016719",
-      appId: "1:681029016719:web:59adaee2d24bcbf115a4fa"
-    };
-
-    window.unidosParkSessionStartedAt = Date.now();
-
-    if (typeof firebase !== 'undefined') {
-      try {
-        if (!firebase.apps.length) firebase.initializeApp(firebaseConfigRTDB);
-        var database = firebase.database();
-
-        window.enviarSolicitacaoSaida = function(ticketDados) {
-          return database.ref('solicitacoes_saida').push({
-            ticket: ticketDados.ticket || ticketDados,
-            local: ticketDados.local || '📍 No Valet',
-            tempo: ticketDados.tempo || '⏱️ 3 Minutos',
-            pagamento: ticketDados.pagamento || '💳 Passar o Cartão',
-            status: 'PENDENTE',
-            timestamp: Date.now()
-          });
-        };
-
-        var iniciouEscutaPedidos = false;
-
-        database.ref('solicitacoes_saida').on('child_added', function(snapshot) {
-          var pedido = snapshot.val() || {};
-          pedido.requestId = snapshot.key;
-
-          if (typeof registrarPedidoSaida === 'function' && pedido.status === 'PENDENTE') {
-            registrarPedidoSaida(pedido);
-          }
-
-          if (!iniciouEscutaPedidos) return;
-          if (pedido.status !== 'PENDENTE') return;
-          if ((pedido.timestamp || 0) >= window.unidosParkSessionStartedAt) {
-            try { document.getElementById('alertSound').play(); } catch(e) {}
-            alert("🚨 NOVO PEDIDO DE SAÍDA RECEBIDO!\nTicket " + (pedido.ticket || "Solicitado"));
-          }
-        });
-
-        setTimeout(function(){ iniciouEscutaPedidos = true; }, 1500);
-      } catch(err) {
-        console.warn("Falha na inicialização do Firebase: ", err);
-      }
     }
   </script>
 </body>
