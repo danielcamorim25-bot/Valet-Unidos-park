@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <!-- Scripts do Firebase v8 -->
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
  
@@ -90,25 +89,27 @@
     .btn-photo-view { background-color: #0284c7; color: white; border: none; padding: 6px 8px; border-radius: 6px; font-size: 0.75rem; font-weight: bold; cursor: pointer; }
     .btn-delete-item { background-color: #dc2626; color: white; border: none; padding: 6px 8px; border-radius: 6px; font-size: 0.75rem; font-weight: bold; cursor: pointer; }
 
-    /* Estilos customizados para a Área do Restaurante (Vermelho + Tons Amadeirados) */
-    #viewTablet { background: #220c0c; padding: 20px; border-radius: 16px; border: 2px solid #7c2d12; }
-    #viewTablet .input-field { background-color: #3b1111; border-color: #9a3412; color: #fef3c7; }
-    #viewTablet .input-field:focus { border-color: #ef4444; }
+    /* Estilos customizados para a Área do Restaurante (Estilo Clássico: Branco, Preto e Cinza Claro) */
+    #viewTablet { background: #f8fafc; color: #0f172a; padding: 20px; border-radius: 16px; border: 2px solid #cbd5e1; }
+    #viewTablet .title { color: #0f172a !important; }
+    #viewTablet .subtitle { color: #475569 !important; }
+    #viewTablet .input-field { background-color: #ffffff; border-color: #cbd5e1; color: #0f172a; }
+    #viewTablet .input-field:focus { border-color: #0284c7; }
     
-    .numpad-btn { background-color: #3b1111; border: 1px solid #9a3412; border-radius: 12px; font-size: 1.8rem; font-weight: bold; color: #fef3c7; padding: 16px 0; cursor: pointer; display: flex; align-items: center; justify-content: center; user-select: none; transition: background-color 0.1s; }
-    .numpad-btn:active { background-color: #5c1d1d; }
+    .numpad-btn { background-color: #ffffff; border: 1px solid #cbd5e1; border-radius: 12px; font-size: 1.8rem; font-weight: bold; color: #0f172a; padding: 16px 0; cursor: pointer; display: flex; align-items: center; justify-content: center; user-select: none; transition: background-color 0.1s; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+    .numpad-btn:active { background-color: #e2e8f0; }
 
-    .option-btn { width: 100%; padding: 14px; border: 2px solid #9a3412; border-radius: 10px; background-color: #3b1111; color: #fef3c7; font-size: 0.95rem; font-weight: bold; cursor: pointer; text-align: left; margin-bottom: 10px; }
-    .option-btn.selected { border-color: #ef4444; background-color: #5c1d1d; color: #f87171; }
+    .option-btn { width: 100%; padding: 14px; border: 2px solid #cbd5e1; border-radius: 10px; background-color: #ffffff; color: #0f172a; font-size: 0.95rem; font-weight: bold; cursor: pointer; text-align: left; margin-bottom: 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+    .option-btn.selected { border-color: #0f172a; background-color: #e2e8f0; color: #0f172a; }
 
-    .qr-container { text-align: center; background-color: #3b1111; padding: 15px; border-radius: 12px; border: 1px dashed #9a3412; margin-bottom: 15px; }
-    .price { font-size: 1.8rem; font-weight: bold; color: #ef4444; margin-bottom: 10px; }
-    .qr-code { width: 160px; height: 160px; margin: 0 auto; display: block; background: #fff; padding: 6px; border-radius: 8px; }
+    .qr-container { text-align: center; background-color: #ffffff; padding: 15px; border-radius: 12px; border: 1px dashed #cbd5e1; margin-bottom: 15px; color: #0f172a; }
+    .price { font-size: 1.8rem; font-weight: bold; color: #0f172a; margin-bottom: 10px; }
+    .qr-code { width: 160px; height: 160px; margin: 0 auto; display: block; background: #fff; padding: 6px; border-radius: 8px; border: 1px solid #cbd5e1; }
 
-    .status-msg { background-color: #7f1d1d; color: #fef3c7; padding: 12px; border-radius: 8px; font-size: 0.9rem; text-align: center; font-weight: bold; margin-bottom: 10px; }
+    .status-msg { background-color: #e2e8f0; color: #0f172a; padding: 12px; border-radius: 8px; font-size: 0.9rem; text-align: center; font-weight: bold; margin-bottom: 10px; border: 1px solid #cbd5e1; }
 
-    .confirmation-card { text-align: center; background-color: #450a0a; border: 2px solid #ef4444; border-radius: 16px; padding: 20px; margin-top: 10px; box-shadow: 0 4px 15px rgba(239, 68, 68, 0.3); }
-    .success-icon { font-size: 3.5rem; color: #ef4444; margin-bottom: 10px; }
+    .confirmation-card { text-align: center; background-color: #ffffff; border: 2px solid #cbd5e1; border-radius: 16px; padding: 20px; margin-top: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); color: #0f172a; }
+    .success-icon { font-size: 3.5rem; color: #059669; margin-bottom: 10px; }
     /* Fim dos estilos do restaurante */
 
     .admin-filter-box { background: #1e293b; border: 1px solid #334155; border-radius: 12px; padding: 10px; margin-bottom: 15px; text-align: center; }
@@ -142,12 +143,12 @@
     .btn-cancel { flex: 1; background-color: #dc2626; color: white; border: none; padding: 14px; border-radius: 10px; font-size: 0.95rem; font-weight: bold; cursor: pointer; }
     .modal-img { max-width: 90%; max-height: 70vh; border-radius: 12px; border: 2px solid white; margin-bottom: 15px; }
 
-    .btn-copy-pix { background-color: #b45309; color: white; border: none; padding: 12px; border-radius: 8px; font-weight: bold; width: 100%; margin-top: 10px; cursor: pointer; font-size: 0.9rem; }
+    .btn-copy-pix { background-color: #0f172a; color: white; border: none; padding: 12px; border-radius: 8px; font-weight: bold; width: 100%; margin-top: 10px; cursor: pointer; font-size: 0.9rem; }
 
     .numpad-container { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 15px; }
     .action-buttons-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 10px; }
-    .btn-sketch-cancel { background-color: #7f1d1d; color: white; font-size: 1.1rem; font-weight: bold; border: none; border-radius: 16px; padding: 16px 10px; cursor: pointer; line-height: 1.2; }
-    .btn-sketch-confirm { background-color: #ef4444; color: white; font-size: 1.1rem; font-weight: bold; border: none; border-radius: 16px; padding: 16px 10px; cursor: pointer; line-height: 1.2; }
+    .btn-sketch-cancel { background-color: #64748b; color: white; font-size: 1.1rem; font-weight: bold; border: none; border-radius: 16px; padding: 16px 10px; cursor: pointer; line-height: 1.2; }
+    .btn-sketch-confirm { background-color: #0f172a; color: white; font-size: 1.1rem; font-weight: bold; border: none; border-radius: 16px; padding: 16px 10px; cursor: pointer; line-height: 1.2; }
 
     #ocrStatus { font-size: 0.8rem; color: #38bdf8; text-align: center; margin-top: 4px; font-weight: bold; display: none; }
 
@@ -318,20 +319,20 @@
         <button class="btn-action-simple btn-gray" style="margin-top:15px;" onclick="abrirSubTelaValet('admin_menu')">Voltar</button>
       </div>
 
-      <!-- TABLET RESTAURANTE (ESTILO CUSTOMIZADO - VERMELHO E AMADEIRADO) -->
+      <!-- TABLET RESTAURANTE (ESTILO CLÁSSICO: BRANCO, PRETO E CINZA CLARO) -->
       <div id="viewTablet" style="display: none;">
         
         <div id="screen1" style="display: block;">
-          <div class="title" style="color:#fef3c7;">Insira ou Escaneie seu Ticket</div>
-          <div class="subtitle" style="color:#fca5a5;">Digite o número ou use a câmera para ler a chave/QR Code</div>
+          <div class="title">Insira ou Escaneie seu Ticket</div>
+          <div class="subtitle">Digite o número ou use a câmera para ler a chave/QR Code</div>
           
           <input type="text" id="ticketInput" class="input-field" placeholder="Ex: 1001" style="text-align: center; font-size: 1.4rem; font-weight: bold;" readonly>
 
-          <button class="btn-camera" style="background-color: #9a3412; margin-bottom: 15px;" onclick="alternarScannerTablet()">
+          <button class="btn-camera" style="background-color: #334155; margin-bottom: 15px;" onclick="alternarScannerTablet()">
             📷 SCANNER DA CHAVE / QR CODE (TOQUE)
           </button>
 
-          <div id="tabletScannerContainer" style="display: none; margin-bottom: 15px; border: 2px dashed #ef4444; border-radius: 12px; overflow: hidden; padding: 5px;">
+          <div id="tabletScannerContainer" style="display: none; margin-bottom: 15px; border: 2px dashed #475569; border-radius: 12px; overflow: hidden; padding: 5px;">
             <div id="tabletReader"></div>
           </div>
 
@@ -347,7 +348,7 @@
             <button class="numpad-btn" onclick="digitarNumpad('9')">9</button>
             <button class="numpad-btn" onclick="digitarNumpad('00')">00</button>
             <button class="numpad-btn" onclick="digitarNumpad('0')">0</button>
-            <button class="numpad-btn" onclick="apagarNumpad()">✓</button>
+            <button class="numpad-btn" onclick="apagarNumpad()">⌫</button>
           </div>
 
           <div class="action-buttons-grid">
@@ -357,71 +358,75 @@
         </div>
 
         <div id="screen2" style="display: none;">
-          <div class="title" style="color:#fef3c7;">Local de Retirada</div>
-          <div class="subtitle" style="color:#fca5a5;">Onde prefere receber seu carro?</div>
+          <div class="title">Local de Retirada</div>
+          <div class="subtitle">Onde prefere receber seu carro?</div>
           <button class="option-btn selected" onclick="selecionarOpcao(this, 'local')">📍 No Valet</button>
           <button class="option-btn" onclick="selecionarOpcao(this, 'local')">🍽️ Frente do Restaurante</button>
-          <button class="btn-action-simple" style="background-color: #9a3412;" onclick="mostrarTelaTablet(3)">Continuar</button>
+          <button class="btn-action-simple" style="background-color: #0f172a;" onclick="mostrarTelaTablet(3)">Continuar</button>
         </div>
 
         <div id="screen3" style="display: none;">
-          <div class="title" style="color:#fef3c7;">Tempo de Retirada</div>
-          <div class="subtitle" style="color:#fca5a5;">Quando você pretende buscar?</div>
+          <div class="title">Tempo de Retirada</div>
+          <div class="subtitle">Quando você pretende buscar?</div>
           <button class="option-btn selected" onclick="selecionarOpcao(this, 'tempo')">⏱️ 3 Minutos</button>
           <button class="option-btn" onclick="selecionarOpcao(this, 'tempo')">⏱️ 5 Minutos</button>
           <button class="option-btn" onclick="selecionarOpcao(this, 'tempo')">⏱️ 10 Minutos</button>
-          <button class="btn-action-simple" style="background-color: #9a3412;" onclick="mostrarTelaTablet(4)">Continuar</button>
+          <button class="btn-action-simple" style="background-color: #0f172a;" onclick="mostrarTelaTablet(4)">Continuar</button>
         </div>
 
         <!-- TELA 4: PAGAMENTO -->
         <div id="screen4" style="display: none;">
-          <div class="title" style="color:#fef3c7;">Forma de Pagamento</div>
-          <div class="subtitle" style="color:#fca5a5;">Como deseja realizar o pagamento?</div>
+          <div class="title">Forma de Pagamento</div>
+          <div class="subtitle">Como deseja realizar o pagamento?</div>
           
           <button class="option-btn selected" onclick="selecionarOpcao(this, 'pagamento')">💳 Passar o Cartão (Manobrista traz a maquininha)</button>
           <button class="option-btn" onclick="selecionarOpcao(this, 'pagamento')">⚡ Pagar via Pix</button>
           <button class="option-btn" onclick="selecionarOpcao(this, 'pagamento')">💵 Dinheiro (Com troco)</button>
 
-          <!-- Seção de Troco para Dinheiro com Teclado Digital Personalizado -->
-          <div id="trocoSection" style="display: none; margin-top: 12px; background: #220c0c; padding: 12px; border-radius: 8px; border: 1px solid #9a3412;">
-            <label style="font-size: 0.85rem; color: #fef3c7; display: block; margin-bottom: 6px;">Troco para quanto? (Valor em Dinheiro)</label>
-            <input type="text" id="valorTrocoInput" class="input-field" placeholder="Ex: 50" style="margin-bottom: 8px; font-size: 1.1rem; padding: 8px; text-align: center;" readonly>
+          <!-- Seção de Troco para Dinheiro com Teclado Numérico Customizado -->
+          <div id="trocoSection" style="display: none; margin-top: 12px; background: #ffffff; padding: 12px; border-radius: 8px; border: 1px solid #cbd5e1;">
+            <label style="font-size: 0.85rem; color: #0f172a; display: block; margin-bottom: 6px; font-weight: bold;">Troco para quanto? (Valor em Dinheiro)</label>
+            <input type="text" id="valorTrocoInput" class="input-field" placeholder="Ex: R$ 50,00" style="margin-bottom: 8px; font-size: 1rem; padding: 8px; background: #f8fafc;" readonly>
             
-            <!-- Teclado Numérico Exclusivo para Troco -->
-            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 8px;">
-              <button type="button" class="numpad-btn" style="font-size: 1.2rem; padding: 10px 0;" onclick="digitarTrocoNumpad('1')">1</button>
-              <button type="button" class="numpad-btn" style="font-size: 1.2rem; padding: 10px 0;" onclick="digitarTrocoNumpad('2')">2</button>
-              <button type="button" class="numpad-btn" style="font-size: 1.2rem; padding: 10px 0;" onclick="digitarTrocoNumpad('3')">3</button>
-              <button type="button" class="numpad-btn" style="font-size: 1.2rem; padding: 10px 0;" onclick="digitarTrocoNumpad('4')">4</button>
-              <button type="button" class="numpad-btn" style="font-size: 1.2rem; padding: 10px 0;" onclick="digitarTrocoNumpad('5')">5</button>
-              <button type="button" class="numpad-btn" style="font-size: 1.2rem; padding: 10px 0;" onclick="digitarTrocoNumpad('6')">6</button>
-              <button type="button" class="numpad-btn" style="font-size: 1.2rem; padding: 10px 0;" onclick="digitarTrocoNumpad('7')">7</button>
-              <button type="button" class="numpad-btn" style="font-size: 1.2rem; padding: 10px 0;" onclick="digitarTrocoNumpad('8')">8</button>
-              <button type="button" class="numpad-btn" style="font-size: 1.2rem; padding: 10px 0;" onclick="digitarTrocoNumpad('9')">9</button>
-              <button type="button" class="numpad-btn" style="font-size: 1.2rem; padding: 10px 0;" onclick="digitarTrocoNumpad('00')">00</button>
-              <button type="button" class="numpad-btn" style="font-size: 1.2rem; padding: 10px 0;" onclick="digitarTrocoNumpad('0')">0</button>
-              <button type="button" class="numpad-btn" style="font-size: 1.1rem; padding: 10px 0; background-color: #7f1d1d;" onclick="apagarTrocoNumpad()">⌫</button>
+            <!-- Teclado Numérico para Troco -->
+            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin-bottom: 8px;">
+              <button type="button" class="numpad-btn" style="padding: 10px; font-size: 1.2rem;" onclick="digitarTrocoNumpad('1')">1</button>
+              <button type="button" class="numpad-btn" style="padding: 10px; font-size: 1.2rem;" onclick="digitarTrocoNumpad('2')">2</button>
+              <button type="button" class="numpad-btn" style="padding: 10px; font-size: 1.2rem;" onclick="digitarTrocoNumpad('3')">3</button>
+              <button type="button" class="numpad-btn" style="padding: 10px; font-size: 1.2rem;" onclick="digitarTrocoNumpad('4')">4</button>
+              <button type="button" class="numpad-btn" style="padding: 10px; font-size: 1.2rem;" onclick="digitarTrocoNumpad('5')">5</button>
+              <button type="button" class="numpad-btn" style="padding: 10px; font-size: 1.2rem;" onclick="digitarTrocoNumpad('6')">6</button>
+              <button type="button" class="numpad-btn" style="padding: 10px; font-size: 1.2rem;" onclick="digitarTrocoNumpad('7')">7</button>
+              <button type="button" class="numpad-btn" style="padding: 10px; font-size: 1.2rem;" onclick="digitarTrocoNumpad('8')">8</button>
+              <button type="button" class="numpad-btn" style="padding: 10px; font-size: 1.2rem;" onclick="digitarTrocoNumpad('9')">9</button>
+              <button type="button" class="numpad-btn" style="padding: 10px; font-size: 1.2rem;" onclick="digitarTrocoNumpad('00')">00</button>
+              <button type="button" class="numpad-btn" style="padding: 10px; font-size: 1.2rem;" onclick="digitarTrocoNumpad('0')">0</button>
+              <button type="button" class="numpad-btn" style="padding: 10px; font-size: 1.2rem; background: #e2e8f0;" onclick="apagarTrocoNumpad()">⌫</button>
             </div>
-            
-            <p style="font-size: 0.75rem; color: #fca5a5; text-align: center;">O manobrista levará o troco necessário junto à entrega do veículo.</p>
+            <div style="display: flex; gap: 6px;">
+              <button type="button" class="btn-action-simple btn-gray" style="padding: 8px; font-size: 0.85rem;" onclick="limparTrocoNumpad()">Limpar</button>
+              <button type="button" class="btn-action-simple btn-green" style="padding: 8px; font-size: 0.85rem;" onclick="fecharTecladoTroco()">✓ Confirmar Troco</button>
+            </div>
+
+            <p style="font-size: 0.75rem; color: #475569; margin-top: 6px;">O manobrista levará o troco necessário junto à entrega do veículo.</p>
           </div>
           
-          <button class="btn-action-simple" style="background-color: #9a3412; margin-top: 15px;" onclick="avancarAposEscolhaPagamento()">Continuar</button>
+          <button class="btn-action-simple" style="background-color: #0f172a; margin-top: 15px;" onclick="avancarAposEscolhaPagamento()">Continuar</button>
         </div>
 
         <!-- TELA 5: PIX -->
         <div id="screen5" style="display: none;">
-          <div class="title" style="color:#fef3c7;">Pagamento via Pix Seguro</div>
+          <div class="title">Pagamento via Pix Seguro</div>
           
           <div id="pixPaymentSection">
             <div class="qr-container">
               <div class="price">R$ 35,00</div>
-              <div id="pixLoading" style="color: #fca5a5; font-size: 0.9rem; padding: 20px;">⚡ Gerando QR Code oficial...</div>
+              <div id="pixLoading" style="color: #475569; font-size: 0.9rem; padding: 20px;">⚡ Gerando QR Code oficial...</div>
               <img id="qrCodeImg" src="" alt="QR Code Pix" class="qr-code" style="display: none;">
-              <p style="font-size: 0.75rem; color: #fca5a5; margin-top: 8px;">Escaneie o código com o aplicativo do seu banco</p>
+              <p style="font-size: 0.75rem; color: #475569; margin-top: 8px;">Escaneie o código com o aplicativo do seu banco</p>
               
               <button class="btn-copy-pix" id="btnCopyPix" style="display: none;" onclick="copiarPixCopiaECola()">📋 Copiar Pix Copia e Cola</button>
-              <button class="btn-action-simple" id="btnPrintComprovantePix" style="display: none; margin-top: 10px; background-color: #7f1d1d;" onclick="imprimirComprovantePixCliente()">🖨️ Imprimir Comprovante Pix</button>
+              <button class="btn-action-simple" id="btnPrintComprovantePix" style="display: none; margin-top: 10px; background-color: #475569;" onclick="imprimirComprovantePixCliente()">🖨️ Imprimir Comprovante Pix</button>
             </div>
 
             <div class="status-msg" id="statusMsg" style="display: none;">
@@ -435,18 +440,18 @@
         <!-- CONFIRMAÇÃO FINAL -->
         <div id="screenConfirmation" style="display: none;" class="confirmation-card">
           <div class="success-icon">✓</div>
-          <div style="font-size: 1.4rem; font-weight: bold; color: #fef3c7; margin-bottom: 6px;">SOLICITAÇÃO ENVIADA!</div>
-          <p style="font-size: 0.95rem; color: #fecaca; margin-bottom: 12px;">Seu veículo foi solicitado! O manobrista já foi notificado.</p>
+          <div style="font-size: 1.4rem; font-weight: bold; color: #0f172a; margin-bottom: 6px;">SOLICITAÇÃO ENVIADA!</div>
+          <p style="font-size: 0.95rem; color: #475569; margin-bottom: 12px;">Seu veículo foi solicitado! O manobrista já foi notificado.</p>
           
-          <div style="background-color: #3b1111; padding: 12px; border-radius: 10px; text-align: left; margin-bottom: 15px; border: 1px solid #9a3412;">
-            <p style="font-size: 0.85rem; color: #fef3c7;"><strong>Ticket:</strong> <span id="confirmTicketNum"></span></p>
-            <p style="font-size: 0.85rem; color: #fef3c7;"><strong>Local de Entrega:</strong> <span id="confirmLocal"></span></p>
-            <p style="font-size: 0.85rem; color: #fef3c7;"><strong>Previsão de Chegada:</strong> <span id="confirmTempo"></span></p>
-            <p style="font-size: 0.85rem; color: #fef3c7;"><strong>Forma de Pagamento:</strong> <span id="confirmPagamento"></span></p>
+          <div style="background-color: #f1f5f9; padding: 12px; border-radius: 10px; text-align: left; margin-bottom: 15px; border: 1px solid #cbd5e1;">
+            <p style="font-size: 0.85rem; color: #0f172a;"><strong>Ticket:</strong> <span id="confirmTicketNum"></span></p>
+            <p style="font-size: 0.85rem; color: #0f172a;"><strong>Local de Entrega:</strong> <span id="confirmLocal"></span></p>
+            <p style="font-size: 0.85rem; color: #0f172a;"><strong>Previsão de Chegada:</strong> <span id="confirmTempo"></span></p>
+            <p style="font-size: 0.85rem; color: #0f172a;"><strong>Forma de Pagamento:</strong> <span id="confirmPagamento"></span></p>
           </div>
 
-          <p style="font-size: 0.8rem; color: #fecaca; font-weight: bold;">Retornando à tela inicial em <span id="timerCountdown">4</span>s...</p>
-          <button class="btn-action-simple" style="margin-top: 15px; padding: 10px; background-color: #9a3412;" onclick="resetarETornarTela1()">🏠 Voltar Imediatamente</button>
+          <p style="font-size: 0.8rem; color: #475569; font-weight: bold;">Retornando à tela inicial em <span id="timerCountdown">4</span>s...</p>
+          <button class="btn-action-simple" style="margin-top: 15px; padding: 10px; background-color: #0f172a;" onclick="resetarETornarTela1()">🏠 Voltar Imediatamente</button>
         </div>
       </div>
 
@@ -564,22 +569,6 @@
   </div>
 
   <script>
-    // Configuração do Firebase Realtime Database
-    const firebaseConfig = {
-      apiKey: "SUA_API_KEY",
-      authDomain: "SEU_DOMINIO.firebaseapp.com",
-      databaseURL: "https://SEU_PROJETO-default-rtdb.firebaseio.com",
-      projectId: "SEU_PROJETO",
-      storageBucket: "SEU_PROJETO.appspot.com",
-      messagingSenderId: "SEU_SENDER_ID",
-      appId: "SEU_APP_ID"
-    };
-
-    if (!firebase.apps.length) {
-      firebase.initializeApp(firebaseConfig);
-    }
-    const db = firebase.database();
-
     var contadorTickets = parseInt(localStorage.getItem('unidos_park_ticket_seq') || '1000');
     var historicoTransacoes = JSON.parse(localStorage.getItem('unidos_park_data') || '[]');
     var bluetoothDevice = null;
@@ -610,44 +599,7 @@
         patioFilter.value = hoje;
       }
       inicializarVagasPadraoSeNecessario();
-      escutarFirebaseEmTempoReal();
     });
-
-    // Funções de Sincronização Instantânea via Firebase
-    function escutarFirebaseEmTempoReal() {
-      // Ouve alterações nos pedidos de saída de forma instantânea
-      db.ref('solicitacoes_saida').on('value', function(snapshot) {
-        const dadosRemotos = snapshot.val();
-        if (dadosRemotos) {
-          Object.keys(dadosRemotos).forEach(function(key) {
-            const req = dadosRemotos[key];
-            let regLocal = historicoTransacoes.find(t => String(t.ticket) === String(req.ticket));
-            
-            if (regLocal) {
-              regLocal.status = req.status === 'CONCLUIDO' ? 'Saída Concluída' : 'Aguardando Saída';
-              if (req.horaEntrega) regLocal.horaEntrega = req.horaEntrega;
-            } else if (req.status !== 'CONCLUIDO') {
-              historicoTransacoes.push({
-                ticket: req.ticket,
-                dataHora: req.dataHora || new Date().toLocaleDateString('pt-BR') + ' ' + new Date().toLocaleTimeString('pt-BR', {hour:'2-digit', minute:'2-digit'}),
-                valor: 35.00,
-                status: 'Aguardando Saída',
-                localRetirada: req.local,
-                tempoRetirada: req.tempo,
-                pagamento: req.pagamento,
-                trocoDinheiro: req.trocoDinheiro,
-                horaSolicitacao: req.horaSolicitacao,
-                requestId: key
-              });
-            }
-          });
-          localStorage.setItem('unidos_park_data', JSON.stringify(historicoTransacoes));
-          atualizarBadgeAvisos();
-          renderizarSaidaECarros();
-          renderizarAdmin();
-        }
-      });
-    }
 
     function inicializarVagasPadraoSeNecessario() {
       var vagasSalvas = localStorage.getItem('unidos_park_vagas_sensores');
@@ -780,7 +732,11 @@
       field.value = field.value.slice(0, -1);
     }
 
-    // Funções do Teclado Numérico de Troco
+    function limparTicketInput() {
+      document.getElementById('ticketInput').value = '';
+    }
+
+    /* Funções do Teclado Numérico para o Troco */
     function digitarTrocoNumpad(valor) {
       var field = document.getElementById('valorTrocoInput');
       field.value += valor;
@@ -791,8 +747,16 @@
       field.value = field.value.slice(0, -1);
     }
 
-    function limparTicketInput() {
-      document.getElementById('ticketInput').value = '';
+    function limparTrocoNumpad() {
+      document.getElementById('valorTrocoInput').value = '';
+    }
+
+    function fecharTecladoTroco() {
+      // Confirmação rápida visual ao fechar/confirmar o valor do troco
+      var val = document.getElementById('valorTrocoInput').value;
+      if (!val) {
+        alert("Por favor, digite o valor para o troco.");
+      }
     }
 
     function autenticar() {
@@ -1133,7 +1097,7 @@
         <p><strong>Entrada:</strong> ${reg.dataHora}</p>
         <p><strong>Saída:</strong> ${horaSaidaAtual}</p>
         <p><strong>Valor Total:</strong> R$ ${reg.valor ? reg.valor.toFixed(2) : '35,00'}</p>
-        ${reg.trocoDinheiro ? `<p><strong>Troco p/ Dinheiro:</strong> R$ ${reg.trocoDinheiro}</p>` : ''}
+        ${reg.trocoDinheiro ? `<p><strong>Troco p/ Dinheiro:</strong> ${reg.trocoDinheiro}</p>` : ''}
         <p><strong>Status:</strong> COMPROVANTE DE ENTREGA SEGURO</p>
       `;
 
@@ -1195,7 +1159,7 @@
 
     function registrarPedidoSaida(payload) {
       var reg = historicoTransacoes.find(t => String(t.ticket) === String(payload.ticket));
-      var requestId = payload.requestId || 'req_' + Date.now() + '_' + Math.floor(Math.random() * 1000);
+      var requestId = payload.requestId || payload.id || '';
       var horaPedido = new Date().toLocaleTimeString('pt-BR', {hour: '2-digit', minute:'2-digit'});
 
       if (reg) {
@@ -1205,7 +1169,7 @@
         reg.pagamento = payload.pagamento || 'Cartão';
         reg.trocoDinheiro = payload.trocoDinheiro || '';
         reg.horaSolicitacao = horaPedido;
-        reg.requestId = requestId;
+        if (requestId) reg.requestId = requestId;
       } else {
         var novoReg = {
           ticket: payload.ticket,
@@ -1224,21 +1188,15 @@
       }
 
       localStorage.setItem('unidos_park_data', JSON.stringify(historicoTransacoes));
-
-      // Sincroniza imediatamente com o Firebase para atualizar em tempo real em todos os aparelhos
-      try {
-        db.ref('solicitacoes_saida/' + requestId).set({
-          ticket: payload.ticket,
-          local: payload.local,
-          tempo: payload.tempo,
-          pagamento: payload.pagamento,
-          trocoDinheiro: payload.trocoDinheiro || '',
-          horaSolicitacao: horaPedido,
-          status: 'PENDENTE',
-          dataHora: new Date().toLocaleDateString('pt-BR') + ' ' + horaPedido
-        });
-      } catch(e) {
-        console.warn('Erro ao enviar para Firebase:', e);
+      
+      // Sincronização melhorada via Firebase (Se configurado)
+      if (typeof firebase !== 'undefined' && firebase.database) {
+        try {
+          var db = firebase.database();
+          db.ref('solicitacoes_saida').push(payload);
+        } catch(e) {
+          console.warn('Erro Firebase push:', e);
+        }
       }
 
       atualizarBadgeAvisos();
@@ -1266,15 +1224,18 @@
 
       localStorage.setItem('unidos_park_data', JSON.stringify(historicoTransacoes));
 
-      try {
-        if (reg.requestId) {
-          await db.ref('solicitacoes_saida/' + reg.requestId).update({
-            status: 'CONCLUIDO',
-            horaEntrega: horaEntrega
-          });
+      if (typeof firebase !== 'undefined' && firebase.database) {
+        try {
+          var db = firebase.database();
+          if (reg.requestId) {
+            await db.ref('solicitacoes_saida/' + reg.requestId).update({
+              status: 'CONCLUIDO',
+              horaEntrega: horaEntrega
+            });
+          }
+        } catch(e) {
+          console.warn('Erro Firebase:', e);
         }
-      } catch(e) {
-        console.warn('Erro Firebase:', e);
       }
 
       atualizarBadgeAvisos();
@@ -1304,12 +1265,15 @@
         historicoTransacoes.splice(index, 1);
         localStorage.setItem('unidos_park_data', JSON.stringify(historicoTransacoes));
 
-        try {
-          if (reg.requestId) {
-            await db.ref('solicitacoes_saida/' + reg.requestId).remove();
+        if (typeof firebase !== 'undefined' && firebase.database) {
+          try {
+            var db = firebase.database();
+            if (reg.requestId) {
+              await db.ref('solicitacoes_saida/' + reg.requestId).remove();
+            }
+          } catch (e) {
+            console.warn('Erro Firebase:', e);
           }
-        } catch (e) {
-          console.warn('Erro Firebase:', e);
         }
 
         atualizarBadgeAvisos();
@@ -1407,7 +1371,7 @@
               <div class="ticket-detail"><strong>Solicitado às:</strong> ${item.horaSolicitacao || 'Recentemente'}</div>
               <div class="ticket-detail"><strong>Local de Entrega:</strong> ${item.localRetirada || 'Valet'}</div>
               <div class="ticket-detail"><strong>Tempo Desejado:</strong> ${item.tempoRetirada || '3 Minutos'}</div>
-              <div class="ticket-detail"><strong>Pagamento:</strong> ${item.pagamento || 'Cartão'} ${item.trocoDinheiro ? `(Troco p/: R$ ${item.trocoDinheiro})` : ''}</div>
+              <div class="ticket-detail"><strong>Pagamento:</strong> ${item.pagamento || 'Cartão'} ${item.trocoDinheiro ? `(Troco p/: ${item.trocoDinheiro})` : ''}</div>
               
               <div style="margin-top: 10px; display: flex; gap: 6px; flex-wrap: wrap;">
                 <button class="btn-action-simple btn-green" style="flex:2; padding: 8px;" onclick="concluirEntregaManobrista('${item.ticket}')">
@@ -1484,7 +1448,7 @@
               <div class="ticket-detail"><strong>Entrada:</strong> ${item.dataHora}</div>
               <div class="ticket-detail"><strong>Hora da Saída:</strong> ${item.horaEntrega || item.horaSolicitacao || 'Registrado'}</div>
               <div class="ticket-detail"><strong>Local de Entrega:</strong> ${item.localRetirada || 'No Valet'}</div>
-              <div class="ticket-detail"><strong>Pagamento:</strong> ${item.pagamento || 'Cartão'} ${item.trocoDinheiro ? `(Troco p/: R$ ${item.trocoDinheiro})` : ''}</div>
+              <div class="ticket-detail"><strong>Pagamento:</strong> ${item.pagamento || 'Cartão'} ${item.trocoDinheiro ? `(Troco p/: ${item.trocoDinheiro})` : ''}</div>
               
               <div style="margin-top: 8px; display: flex; flex-direction: column; gap: 6px;">
                 <div style="display: flex; justify-content: space-between; align-items: center; gap: 6px;">
@@ -1811,7 +1775,7 @@
       if (pagamentoTablet.includes('Dinheiro')) {
         trocoVal = document.getElementById('valorTrocoInput').value.trim();
         if (!trocoVal) {
-          alert('Por favor, informe para quanto é o troco em dinheiro utilizando o teclado numérico.');
+          alert('Por favor, informe para quanto é o troco em dinheiro.');
           return;
         }
       }
@@ -1879,7 +1843,7 @@
         btnConfirmar = document.createElement('button');
         btnConfirmar.id = 'btnConfirmarPagamento';
         btnConfirmar.innerHTML = `✅ Confirmar Pagamento Pix`;
-        btnConfirmar.style.backgroundColor = "#ef4444";
+        btnConfirmar.style.backgroundColor = "#0f172a";
         btnConfirmar.style.color = "white";
         btnConfirmar.style.padding = "12px";
         btnConfirmar.style.border = "none";
@@ -1959,7 +1923,7 @@
       document.getElementById('confirmTicketNum').innerText = ticketTablet;
       document.getElementById('confirmLocal').innerText = localTablet;
       document.getElementById('confirmTempo').innerText = tempoTablet;
-      document.getElementById('confirmPagamento').innerText = pagamentoTablet + (trocoVal ? ` (Troco p/: R$ ${trocoVal})` : '');
+      document.getElementById('confirmPagamento').innerText = pagamentoTablet + (trocoVal ? ` (Troco p/: ${trocoVal})` : '');
 
       document.getElementById('screenConfirmation').style.display = 'block';
 
