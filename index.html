@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
+  <!-- Scripts do Firebase v8 -->
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
  
@@ -381,11 +382,28 @@
           <button class="option-btn" onclick="selecionarOpcao(this, 'pagamento')">⚡ Pagar via Pix</button>
           <button class="option-btn" onclick="selecionarOpcao(this, 'pagamento')">💵 Dinheiro (Com troco)</button>
 
-          <!-- Seção de Troco para Dinheiro -->
+          <!-- Seção de Troco para Dinheiro com Teclado Digital Personalizado -->
           <div id="trocoSection" style="display: none; margin-top: 12px; background: #220c0c; padding: 12px; border-radius: 8px; border: 1px solid #9a3412;">
             <label style="font-size: 0.85rem; color: #fef3c7; display: block; margin-bottom: 6px;">Troco para quanto? (Valor em Dinheiro)</label>
-            <input type="text" id="valorTrocoInput" class="input-field" placeholder="Ex: R$ 50,00" style="margin-bottom: 4px; font-size: 1rem; padding: 8px;">
-            <p style="font-size: 0.75rem; color: #fca5a5;">O manobrista levará o troco necessário junto à entrega do veículo.</p>
+            <input type="text" id="valorTrocoInput" class="input-field" placeholder="Ex: 50" style="margin-bottom: 8px; font-size: 1.1rem; padding: 8px; text-align: center;" readonly>
+            
+            <!-- Teclado Numérico Exclusivo para Troco -->
+            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 8px;">
+              <button type="button" class="numpad-btn" style="font-size: 1.2rem; padding: 10px 0;" onclick="digitarTrocoNumpad('1')">1</button>
+              <button type="button" class="numpad-btn" style="font-size: 1.2rem; padding: 10px 0;" onclick="digitarTrocoNumpad('2')">2</button>
+              <button type="button" class="numpad-btn" style="font-size: 1.2rem; padding: 10px 0;" onclick="digitarTrocoNumpad('3')">3</button>
+              <button type="button" class="numpad-btn" style="font-size: 1.2rem; padding: 10px 0;" onclick="digitarTrocoNumpad('4')">4</button>
+              <button type="button" class="numpad-btn" style="font-size: 1.2rem; padding: 10px 0;" onclick="digitarTrocoNumpad('5')">5</button>
+              <button type="button" class="numpad-btn" style="font-size: 1.2rem; padding: 10px 0;" onclick="digitarTrocoNumpad('6')">6</button>
+              <button type="button" class="numpad-btn" style="font-size: 1.2rem; padding: 10px 0;" onclick="digitarTrocoNumpad('7')">7</button>
+              <button type="button" class="numpad-btn" style="font-size: 1.2rem; padding: 10px 0;" onclick="digitarTrocoNumpad('8')">8</button>
+              <button type="button" class="numpad-btn" style="font-size: 1.2rem; padding: 10px 0;" onclick="digitarTrocoNumpad('9')">9</button>
+              <button type="button" class="numpad-btn" style="font-size: 1.2rem; padding: 10px 0;" onclick="digitarTrocoNumpad('00')">00</button>
+              <button type="button" class="numpad-btn" style="font-size: 1.2rem; padding: 10px 0;" onclick="digitarTrocoNumpad('0')">0</button>
+              <button type="button" class="numpad-btn" style="font-size: 1.1rem; padding: 10px 0; background-color: #7f1d1d;" onclick="apagarTrocoNumpad()">⌫</button>
+            </div>
+            
+            <p style="font-size: 0.75rem; color: #fca5a5; text-align: center;">O manobrista levará o troco necessário junto à entrega do veículo.</p>
           </div>
           
           <button class="btn-action-simple" style="background-color: #9a3412; margin-top: 15px;" onclick="avancarAposEscolhaPagamento()">Continuar</button>
@@ -546,6 +564,22 @@
   </div>
 
   <script>
+    // Configuração do Firebase Realtime Database
+    const firebaseConfig = {
+      apiKey: "SUA_API_KEY",
+      authDomain: "SEU_DOMINIO.firebaseapp.com",
+      databaseURL: "https://SEU_PROJETO-default-rtdb.firebaseio.com",
+      projectId: "SEU_PROJETO",
+      storageBucket: "SEU_PROJETO.appspot.com",
+      messagingSenderId: "SEU_SENDER_ID",
+      appId: "SEU_APP_ID"
+    };
+
+    if (!firebase.apps.length) {
+      firebase.initializeApp(firebaseConfig);
+    }
+    const db = firebase.database();
+
     var contadorTickets = parseInt(localStorage.getItem('unidos_park_ticket_seq') || '1000');
     var historicoTransacoes = JSON.parse(localStorage.getItem('unidos_park_data') || '[]');
     var bluetoothDevice = null;
@@ -576,7 +610,44 @@
         patioFilter.value = hoje;
       }
       inicializarVagasPadraoSeNecessario();
+      escutarFirebaseEmTempoReal();
     });
+
+    // Funções de Sincronização Instantânea via Firebase
+    function escutarFirebaseEmTempoReal() {
+      // Ouve alterações nos pedidos de saída de forma instantânea
+      db.ref('solicitacoes_saida').on('value', function(snapshot) {
+        const dadosRemotos = snapshot.val();
+        if (dadosRemotos) {
+          Object.keys(dadosRemotos).forEach(function(key) {
+            const req = dadosRemotos[key];
+            let regLocal = historicoTransacoes.find(t => String(t.ticket) === String(req.ticket));
+            
+            if (regLocal) {
+              regLocal.status = req.status === 'CONCLUIDO' ? 'Saída Concluída' : 'Aguardando Saída';
+              if (req.horaEntrega) regLocal.horaEntrega = req.horaEntrega;
+            } else if (req.status !== 'CONCLUIDO') {
+              historicoTransacoes.push({
+                ticket: req.ticket,
+                dataHora: req.dataHora || new Date().toLocaleDateString('pt-BR') + ' ' + new Date().toLocaleTimeString('pt-BR', {hour:'2-digit', minute:'2-digit'}),
+                valor: 35.00,
+                status: 'Aguardando Saída',
+                localRetirada: req.local,
+                tempoRetirada: req.tempo,
+                pagamento: req.pagamento,
+                trocoDinheiro: req.trocoDinheiro,
+                horaSolicitacao: req.horaSolicitacao,
+                requestId: key
+              });
+            }
+          });
+          localStorage.setItem('unidos_park_data', JSON.stringify(historicoTransacoes));
+          atualizarBadgeAvisos();
+          renderizarSaidaECarros();
+          renderizarAdmin();
+        }
+      });
+    }
 
     function inicializarVagasPadraoSeNecessario() {
       var vagasSalvas = localStorage.getItem('unidos_park_vagas_sensores');
@@ -706,6 +777,17 @@
 
     function apagarNumpad() {
       var field = document.getElementById('ticketInput');
+      field.value = field.value.slice(0, -1);
+    }
+
+    // Funções do Teclado Numérico de Troco
+    function digitarTrocoNumpad(valor) {
+      var field = document.getElementById('valorTrocoInput');
+      field.value += valor;
+    }
+
+    function apagarTrocoNumpad() {
+      var field = document.getElementById('valorTrocoInput');
       field.value = field.value.slice(0, -1);
     }
 
@@ -1051,7 +1133,7 @@
         <p><strong>Entrada:</strong> ${reg.dataHora}</p>
         <p><strong>Saída:</strong> ${horaSaidaAtual}</p>
         <p><strong>Valor Total:</strong> R$ ${reg.valor ? reg.valor.toFixed(2) : '35,00'}</p>
-        ${reg.trocoDinheiro ? `<p><strong>Troco p/ Dinheiro:</strong> ${reg.trocoDinheiro}</p>` : ''}
+        ${reg.trocoDinheiro ? `<p><strong>Troco p/ Dinheiro:</strong> R$ ${reg.trocoDinheiro}</p>` : ''}
         <p><strong>Status:</strong> COMPROVANTE DE ENTREGA SEGURO</p>
       `;
 
@@ -1113,7 +1195,7 @@
 
     function registrarPedidoSaida(payload) {
       var reg = historicoTransacoes.find(t => String(t.ticket) === String(payload.ticket));
-      var requestId = payload.requestId || payload.id || '';
+      var requestId = payload.requestId || 'req_' + Date.now() + '_' + Math.floor(Math.random() * 1000);
       var horaPedido = new Date().toLocaleTimeString('pt-BR', {hour: '2-digit', minute:'2-digit'});
 
       if (reg) {
@@ -1123,7 +1205,7 @@
         reg.pagamento = payload.pagamento || 'Cartão';
         reg.trocoDinheiro = payload.trocoDinheiro || '';
         reg.horaSolicitacao = horaPedido;
-        if (requestId) reg.requestId = requestId;
+        reg.requestId = requestId;
       } else {
         var novoReg = {
           ticket: payload.ticket,
@@ -1142,6 +1224,23 @@
       }
 
       localStorage.setItem('unidos_park_data', JSON.stringify(historicoTransacoes));
+
+      // Sincroniza imediatamente com o Firebase para atualizar em tempo real em todos os aparelhos
+      try {
+        db.ref('solicitacoes_saida/' + requestId).set({
+          ticket: payload.ticket,
+          local: payload.local,
+          tempo: payload.tempo,
+          pagamento: payload.pagamento,
+          trocoDinheiro: payload.trocoDinheiro || '',
+          horaSolicitacao: horaPedido,
+          status: 'PENDENTE',
+          dataHora: new Date().toLocaleDateString('pt-BR') + ' ' + horaPedido
+        });
+      } catch(e) {
+        console.warn('Erro ao enviar para Firebase:', e);
+      }
+
       atualizarBadgeAvisos();
       renderizarSaidaECarros();
       renderizarAdmin();
@@ -1167,18 +1266,15 @@
 
       localStorage.setItem('unidos_park_data', JSON.stringify(historicoTransacoes));
 
-      if (typeof firebase !== 'undefined' && firebase.database) {
-        try {
-          var db = firebase.database();
-          if (reg.requestId) {
-            await db.ref('solicitacoes_saida/' + reg.requestId).update({
-              status: 'CONCLUIDO',
-              horaEntrega: horaEntrega
-            });
-          }
-        } catch(e) {
-          console.warn('Erro Firebase:', e);
+      try {
+        if (reg.requestId) {
+          await db.ref('solicitacoes_saida/' + reg.requestId).update({
+            status: 'CONCLUIDO',
+            horaEntrega: horaEntrega
+          });
         }
+      } catch(e) {
+        console.warn('Erro Firebase:', e);
       }
 
       atualizarBadgeAvisos();
@@ -1208,15 +1304,12 @@
         historicoTransacoes.splice(index, 1);
         localStorage.setItem('unidos_park_data', JSON.stringify(historicoTransacoes));
 
-        if (typeof firebase !== 'undefined' && firebase.database) {
-          try {
-            var db = firebase.database();
-            if (reg.requestId) {
-              await db.ref('solicitacoes_saida/' + reg.requestId).remove();
-            }
-          } catch (e) {
-            console.warn('Erro Firebase:', e);
+        try {
+          if (reg.requestId) {
+            await db.ref('solicitacoes_saida/' + reg.requestId).remove();
           }
+        } catch (e) {
+          console.warn('Erro Firebase:', e);
         }
 
         atualizarBadgeAvisos();
@@ -1314,7 +1407,7 @@
               <div class="ticket-detail"><strong>Solicitado às:</strong> ${item.horaSolicitacao || 'Recentemente'}</div>
               <div class="ticket-detail"><strong>Local de Entrega:</strong> ${item.localRetirada || 'Valet'}</div>
               <div class="ticket-detail"><strong>Tempo Desejado:</strong> ${item.tempoRetirada || '3 Minutos'}</div>
-              <div class="ticket-detail"><strong>Pagamento:</strong> ${item.pagamento || 'Cartão'} ${item.trocoDinheiro ? `(Troco p/: ${item.trocoDinheiro})` : ''}</div>
+              <div class="ticket-detail"><strong>Pagamento:</strong> ${item.pagamento || 'Cartão'} ${item.trocoDinheiro ? `(Troco p/: R$ ${item.trocoDinheiro})` : ''}</div>
               
               <div style="margin-top: 10px; display: flex; gap: 6px; flex-wrap: wrap;">
                 <button class="btn-action-simple btn-green" style="flex:2; padding: 8px;" onclick="concluirEntregaManobrista('${item.ticket}')">
@@ -1391,7 +1484,7 @@
               <div class="ticket-detail"><strong>Entrada:</strong> ${item.dataHora}</div>
               <div class="ticket-detail"><strong>Hora da Saída:</strong> ${item.horaEntrega || item.horaSolicitacao || 'Registrado'}</div>
               <div class="ticket-detail"><strong>Local de Entrega:</strong> ${item.localRetirada || 'No Valet'}</div>
-              <div class="ticket-detail"><strong>Pagamento:</strong> ${item.pagamento || 'Cartão'} ${item.trocoDinheiro ? `(Troco p/: ${item.trocoDinheiro})` : ''}</div>
+              <div class="ticket-detail"><strong>Pagamento:</strong> ${item.pagamento || 'Cartão'} ${item.trocoDinheiro ? `(Troco p/: R$ ${item.trocoDinheiro})` : ''}</div>
               
               <div style="margin-top: 8px; display: flex; flex-direction: column; gap: 6px;">
                 <div style="display: flex; justify-content: space-between; align-items: center; gap: 6px;">
@@ -1718,7 +1811,7 @@
       if (pagamentoTablet.includes('Dinheiro')) {
         trocoVal = document.getElementById('valorTrocoInput').value.trim();
         if (!trocoVal) {
-          alert('Por favor, informe para quanto é o troco em dinheiro.');
+          alert('Por favor, informe para quanto é o troco em dinheiro utilizando o teclado numérico.');
           return;
         }
       }
@@ -1866,7 +1959,7 @@
       document.getElementById('confirmTicketNum').innerText = ticketTablet;
       document.getElementById('confirmLocal').innerText = localTablet;
       document.getElementById('confirmTempo').innerText = tempoTablet;
-      document.getElementById('confirmPagamento').innerText = pagamentoTablet + (trocoVal ? ` (Troco p/: ${trocoVal})` : '');
+      document.getElementById('confirmPagamento').innerText = pagamentoTablet + (trocoVal ? ` (Troco p/: R$ ${trocoVal})` : '');
 
       document.getElementById('screenConfirmation').style.display = 'block';
 
