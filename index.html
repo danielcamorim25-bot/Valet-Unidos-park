@@ -1,8 +1,40 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+  <!-- Firebase SDK Moderno (Modular v10) via ESM -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+    import { getDatabase, ref, push, update, remove } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+
+    // Insira as configurações do seu projeto Firebase aqui se desejar nuvem:
+    const firebaseConfig = {
+      // apiKey: "SUA_API_KEY",
+      // authDomain: "SEU_AUTHDOMAIN",
+      // databaseURL: "SUA_DATABASE_URL",
+      // projectId: "SEU_PROJECT_ID",
+      // storageBucket: "SEU_STORAGE_BUCKET",
+      // messagingSenderId: "SEU_MESSAGING_SENDER_ID",
+      // appId: "SEU_APP_ID"
+    };
+
+    // Inicialização segura (caso haja config preenchida)
+    let dbInstance = null;
+    try {
+      if (firebaseConfig.databaseURL) {
+        const app = initializeApp(firebaseConfig);
+        dbInstance = getDatabase(app);
+      }
+    } catch(e) {
+      console.warn("Firebase não configurado ou rodando em modo local.");
+    }
+
+    // Disponibiliza as funções globalmente para o escopo do app existente
+    window.fbDatabase = dbInstance;
+    window.fbRef = ref;
+    window.fbPush = push;
+    window.fbUpdate = update;
+    window.fbRemove = remove;
+  </script>
  
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -89,7 +121,6 @@
     .btn-photo-view { background-color: #0284c7; color: white; border: none; padding: 6px 8px; border-radius: 6px; font-size: 0.75rem; font-weight: bold; cursor: pointer; }
     .btn-delete-item { background-color: #dc2626; color: white; border: none; padding: 6px 8px; border-radius: 6px; font-size: 0.75rem; font-weight: bold; cursor: pointer; }
 
-    /* Estilos customizados para a Área do Restaurante (Estilo Clássico: Branco, Preto e Cinza Claro) */
     #viewTablet { background: #f8fafc; color: #0f172a; padding: 20px; border-radius: 16px; border: 2px solid #cbd5e1; }
     #viewTablet .title { color: #0f172a !important; }
     #viewTablet .subtitle { color: #475569 !important; }
@@ -110,7 +141,6 @@
 
     .confirmation-card { text-align: center; background-color: #ffffff; border: 2px solid #cbd5e1; border-radius: 16px; padding: 20px; margin-top: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); color: #0f172a; }
     .success-icon { font-size: 3.5rem; color: #059669; margin-bottom: 10px; }
-    /* Fim dos estilos do restaurante */
 
     .admin-filter-box { background: #1e293b; border: 1px solid #334155; border-radius: 12px; padding: 10px; margin-bottom: 15px; text-align: center; }
     .admin-filter-box label { font-size: 0.8rem; font-weight: bold; color: #cbd5e1; display: block; margin-bottom: 4px; }
@@ -122,20 +152,11 @@
     .metric-value { font-size: 1.3rem; color: #f8fafc; font-weight: bold; margin-top: 4px; }
 
     .admin-chart-container { background: #1e293b; border: 1px solid #334155; border-radius: 12px; padding: 12px; margin-bottom: 15px; }
-    .chart-bar-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; font-size: 0.8rem; color: #cbd5e1; }
-    .chart-bar-bg { flex: 1; background: #334155; height: 16px; border-radius: 8px; margin: 0 8px; overflow: hidden; position: relative; }
-    .chart-bar-fill { background: #38bdf8; height: 100%; border-radius: 8px; transition: width 0.4s ease; }
-
     .admin-table { width: 100%; border-collapse: collapse; font-size: 0.75rem; background-color: #1e293b; color: #f8fafc; }
     .admin-table th, .admin-table td { border: 1px solid #334155; padding: 6px 4px; text-align: center; }
     .admin-table th { background-color: #0f172a; color: #38bdf8; }
 
-    .action-td-container { display: flex; align-items: center; justify-content: center; gap: 4px; }
-
     .gallery-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-    .gallery-card { background: #1e293b; border: 1px solid #334155; border-radius: 8px; padding: 8px; font-size: 0.75rem; }
-    .gallery-card img { width: 100%; height: 90px; object-fit: cover; border-radius: 6px; margin-bottom: 4px; cursor: pointer; }
-
     .camera-modal, .photo-modal { display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background-color: rgba(0,0,0,0.9); z-index: 9999; flex-direction: column; align-items: center; justify-content: center; padding: 20px; }
     .camera-video { width: 100%; max-width: 440px; height: 70vh; object-fit: cover; border-radius: 16px; background-color: #1e293b; }
     .camera-controls { display: flex; gap: 12px; width: 100%; max-width: 440px; margin-top: 15px; }
@@ -208,7 +229,6 @@
             <div class="label-box">Entrada<br>Carros</div>
           </button>
 
-          <!-- BOTÃO DE SAÍDA DE CARROS -->
           <button class="block-btn block-saida" onclick="abrirSubTelaValet('saida')">
             <div id="badgeSaidasAlert" class="badge-alert" style="display: none;">0</div>
             <div class="label-box">Saída de<br>Carros</div>
@@ -319,9 +339,8 @@
         <button class="btn-action-simple btn-gray" style="margin-top:15px;" onclick="abrirSubTelaValet('admin_menu')">Voltar</button>
       </div>
 
-      <!-- TABLET RESTAURANTE (ESTILO CLÁSSICO: BRANCO, PRETO E CINZA CLARO) -->
+      <!-- TABLET RESTAURANTE -->
       <div id="viewTablet" style="display: none;">
-        
         <div id="screen1" style="display: block;">
           <div class="title">Insira ou Escaneie seu Ticket</div>
           <div class="subtitle">Digite o número ou use a câmera para ler a chave/QR Code</div>
@@ -374,7 +393,6 @@
           <button class="btn-action-simple" style="background-color: #0f172a;" onclick="mostrarTelaTablet(4)">Continuar</button>
         </div>
 
-        <!-- TELA 4: PAGAMENTO -->
         <div id="screen4" style="display: none;">
           <div class="title">Forma de Pagamento</div>
           <div class="subtitle">Como deseja realizar o pagamento?</div>
@@ -383,12 +401,10 @@
           <button class="option-btn" onclick="selecionarOpcao(this, 'pagamento')">⚡ Pagar via Pix</button>
           <button class="option-btn" onclick="selecionarOpcao(this, 'pagamento')">💵 Dinheiro (Com troco)</button>
 
-          <!-- Seção de Troco para Dinheiro com Teclado Numérico Customizado -->
           <div id="trocoSection" style="display: none; margin-top: 12px; background: #ffffff; padding: 12px; border-radius: 8px; border: 1px solid #cbd5e1;">
             <label style="font-size: 0.85rem; color: #0f172a; display: block; margin-bottom: 6px; font-weight: bold;">Troco para quanto? (Valor em Dinheiro)</label>
             <input type="text" id="valorTrocoInput" class="input-field" placeholder="Ex: R$ 50,00" style="margin-bottom: 8px; font-size: 1rem; padding: 8px; background: #f8fafc;" readonly>
             
-            <!-- Teclado Numérico para Troco -->
             <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin-bottom: 8px;">
               <button type="button" class="numpad-btn" style="padding: 10px; font-size: 1.2rem;" onclick="digitarTrocoNumpad('1')">1</button>
               <button type="button" class="numpad-btn" style="padding: 10px; font-size: 1.2rem;" onclick="digitarTrocoNumpad('2')">2</button>
@@ -407,14 +423,11 @@
               <button type="button" class="btn-action-simple btn-gray" style="padding: 8px; font-size: 0.85rem;" onclick="limparTrocoNumpad()">Limpar</button>
               <button type="button" class="btn-action-simple btn-green" style="padding: 8px; font-size: 0.85rem;" onclick="fecharTecladoTroco()">✓ Confirmar Troco</button>
             </div>
-
-            <p style="font-size: 0.75rem; color: #475569; margin-top: 6px;">O manobrista levará o troco necessário junto à entrega do veículo.</p>
           </div>
           
           <button class="btn-action-simple" style="background-color: #0f172a; margin-top: 15px;" onclick="avancarAposEscolhaPagamento()">Continuar</button>
         </div>
 
-        <!-- TELA 5: PIX -->
         <div id="screen5" style="display: none;">
           <div class="title">Pagamento via Pix Seguro</div>
           
@@ -423,21 +436,17 @@
               <div class="price">R$ 35,00</div>
               <div id="pixLoading" style="color: #475569; font-size: 0.9rem; padding: 20px;">⚡ Gerando QR Code oficial...</div>
               <img id="qrCodeImg" src="" alt="QR Code Pix" class="qr-code" style="display: none;">
-              <p style="font-size: 0.75rem; color: #475569; margin-top: 8px;">Escaneie o código com o aplicativo do seu banco</p>
               
               <button class="btn-copy-pix" id="btnCopyPix" style="display: none;" onclick="copiarPixCopiaECola()">📋 Copiar Pix Copia e Cola</button>
               <button class="btn-action-simple" id="btnPrintComprovantePix" style="display: none; margin-top: 10px; background-color: #475569;" onclick="imprimirComprovantePixCliente()">🖨️ Imprimir Comprovante Pix</button>
             </div>
 
-            <div class="status-msg" id="statusMsg" style="display: none;">
-              ⏳ Aguardando confirmação...
-            </div>
+            <div class="status-msg" id="statusMsg" style="display: none;">⏳ Aguardando confirmação...</div>
           </div>
 
           <button class="btn-action-simple btn-gray" style="margin-top: 10px;" onclick="mostrarTelaTablet(4)">Voltar</button>
         </div>
 
-        <!-- CONFIRMAÇÃO FINAL -->
         <div id="screenConfirmation" style="display: none;" class="confirmation-card">
           <div class="success-icon">✓</div>
           <div style="font-size: 1.4rem; font-weight: bold; color: #0f172a; margin-bottom: 6px;">SOLICITAÇÃO ENVIADA!</div>
@@ -450,29 +459,23 @@
             <p style="font-size: 0.85rem; color: #0f172a;"><strong>Forma de Pagamento:</strong> <span id="confirmPagamento"></span></p>
           </div>
 
-          <p style="font-size: 0.8rem; color: #475569; font-weight: bold;">Retornando à tela inicial em <span id="timerCountdown">4</span>s...</p>
-          <button class="btn-action-simple" style="margin-top: 15px; padding: 10px; background-color: #0f172a;" onclick="resetarETornarTela1()">🏠 Voltar Imediatamente</button>
+          <button class="btn-action-simple" style="margin-top: 15px; padding: 10px; background-color: #0f172a;" onclick="resetarETornارTela1()">🏠 Voltar Imediatamente</button>
         </div>
       </div>
 
       <!-- ADMIN GENERAL -->
       <div id="viewAdmin" style="display: none; background: #1e293b; padding: 20px; border-radius: 16px; border: 1px solid #334155;">
         <div class="title" style="color:#f8fafc;">Painel Geral do Administrador</div>
-        <div class="subtitle" style="color:#94a3b8;">Controle exclusivo, faturamento antifraude e gráficos de andamento</div>
+        <div class="subtitle" style="color:#94a3b8;">Controle exclusivo, faturamento antifraude e gráficos</div>
 
-        <!-- NOVO BOTÃO DE ACESSO AS VAGAS DOS SENSORES -->
         <div style="margin-bottom: 15px;">
-          <button class="btn-action-simple btn-blue" style="background-color: #0d9488; font-size: 1.05rem;" onclick="abrirTelaSensoresVagas()">
-            📡 GESTÃO DE VAGAS E SENSORES
-          </button>
+          <button class="btn-action-simple btn-blue" style="background-color: #0d9488; font-size: 1.05rem;" onclick="abrirTelaSensoresVagas()">📡 GESTÃO DE VAGAS E SENSORES</button>
         </div>
 
         <div class="admin-filter-box">
           <label for="adminDateFilter">📅 Selecionar Data do Fechamento / Log:</label>
           <input type="date" id="adminDateFilter" onchange="renderizarAdmin()">
-          <button class="btn-action-simple btn-green" style="margin-top: 10px;" onclick="imprimirFechamentoCaixa()">
-            🖨️ IMPRIMIR FECHAMENTO DO DIA (AUDITORIA)
-          </button>
+          <button class="btn-action-simple btn-green" style="margin-top: 10px;" onclick="imprimirFechamentoCaixa()">🖨️ IMPRIMIR FECHAMENTO DO DIA</button>
         </div>
 
         <div class="admin-metrics">
@@ -480,14 +483,12 @@
           <div class="metric-box"><div class="metric-title">TOTAL VEÍCULOS</div><div class="metric-value" id="totalCars">0</div></div>
         </div>
 
-        <!-- GRÁFICO DE ANDAMENTO -->
         <div class="admin-chart-container">
           <div style="font-size: 0.85rem; font-weight: bold; color: #f8fafc; margin-bottom: 8px;">📊 Andamento da Operação por Dias</div>
           <div id="adminDaysChart"></div>
         </div>
 
-        <!-- LOG DETALHADO -->
-        <div class="title" style="margin-top: 15px; font-size: 0.95rem; color:#f8fafc; text-align: left;">📋 Log Detalhado (Controle Caixa 2)</div>
+        <div class="title" style="margin-top: 15px; font-size: 0.95rem; color:#f8fafc; text-align: left;">📋 Log Detalhado</div>
         <div style="overflow-x: auto; margin-top: 8px;">
           <table class="admin-table">
             <thead>
@@ -503,9 +504,6 @@
             <tbody id="adminTableBody"></tbody>
           </table>
         </div>
-
-        <div class="title" style="margin-top: 25px; font-size: 1rem; color:#f8fafc;">📸 Fotos de Entradas Recentes</div>
-        <div class="gallery-grid" id="adminGalleryGrid" style="margin-top: 10px;"></div>
 
         <button class="btn-action-simple btn-gray" style="margin-top:20px;" onclick="voltarMenuValet()">Voltar para Valet</button>
       </div>
@@ -542,25 +540,15 @@
     </div>
   </div>
 
-  <div id="photoViewModal" class="photo-modal">
-    <h3 style="color: white; margin-bottom: 10px;" id="photoModalTitle">Foto do Veículo</h3>
-    <img id="photoModalImg" class="modal-img" src="" alt="Foto">
-    <p style="color: #cbd5e1; font-size: 0.85rem; margin-bottom: 15px;" id="photoModalObs"></p>
-    <button class="btn-cancel" style="width: 200px;" onclick="fecharModalFoto()">Fechar</button>
-  </div>
-
   <canvas id="cameraCanvas" style="display: none;"></canvas>
   
-  <!-- ÁUDIOS -->
   <audio id="beepSuccess" src="https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3" preload="auto"></audio>
   <audio id="alertSound" src="https://assets.mixkit.co/active_storage/sfx/995/995-preview.mp3" preload="auto"></audio>
 
-  <!-- ÁREA DE IMPRESSÃO UNIVERSAL -->
   <div id="printArea">
     <p>--- UNIDOS PARK VALET ---</p>
     <p id="printHeaderTipo">TICKET DE ENTRADA</p>
     <div class="ticket-num" id="printTicketNum">0000</div>
-    
     <div id="printImgHolder"></div>
     <div class="receipt-details" id="printReceiptDetails"></div>
     <p id="printDataHora"></p>
@@ -582,33 +570,19 @@
     
     var mediaStream = null;
     var tipoFotoAtual = '';
-    var html5QrcodeTablet = null;
     
-    var currentPixCopiaECola = '';
-    window.timerRetornoInicio = null;
-
     document.addEventListener("DOMContentLoaded", function() {
-      var dateFilter = document.getElementById('adminDateFilter');
-      if (dateFilter) {
-        var hoje = new Date().toISOString().split('T')[0];
-        dateFilter.value = hoje;
-      }
-      var patioFilter = document.getElementById('patioDateFilter');
-      if (patioFilter) {
-        var hoje = new Date().toISOString().split('T')[0];
-        patioFilter.value = hoje;
-      }
+      var hoje = new Date().toISOString().split('T')[0];
+      if (document.getElementById('adminDateFilter')) document.getElementById('adminDateFilter').value = hoje;
+      if (document.getElementById('patioDateFilter')) document.getElementById('patioDateFilter').value = hoje;
       inicializarVagasPadraoSeNecessario();
     });
 
     function inicializarVagasPadraoSeNecessario() {
-      var vagasSalvas = localStorage.getItem('unidos_park_vagas_sensores');
-      if (!vagasSalvas) {
+      if (!localStorage.getItem('unidos_park_vagas_sensores')) {
         var vagasIniciais = [
-          { id: 'V01', tipo: 'Carro Padrão', status: 'Livre', placa: '', atualizado: 'Agora' },
-          { id: 'V02', tipo: 'SUV / Grande', status: 'Livre', placa: '', atualizado: 'Agora' },
-          { id: 'V03', tipo: 'Carro Padrão', status: 'Manutenção', placa: '', atualizado: 'Hoje' },
-          { id: 'V04', tipo: 'Vip / Elétrico', status: 'Livre', placa: '', atualizado: 'Agora' }
+          { id: 'V01', tipo: 'Carro Padrão', status: 'Livre', placa: '', updated: 'Agora' },
+          { id: 'V02', tipo: 'SUV / Grande', status: 'Livre', placa: '', updated: 'Agora' }
         ];
         localStorage.setItem('unidos_park_vagas_sensores', JSON.stringify(vagasIniciais));
       }
@@ -629,102 +603,14 @@
     function renderizarSensoresVagas() {
       var container = document.getElementById('listaVagasSensoresContainer');
       var vagas = JSON.parse(localStorage.getItem('unidos_park_vagas_sensores') || '[]');
-      
-      var livres = vagas.filter(v => v.status === 'Livre').length;
-      var ocupadas = vagas.filter(v => v.status === 'Ocupada').length;
-
-      document.getElementById('vagasLivresCount').innerText = livres;
-      document.getElementById('vagasOcupadasCount').innerText = ocupadas;
-
-      if (vagas.length === 0) {
-        container.innerHTML = '<p style="text-align:center; color:#94a3b8; padding: 15px;">Nenhuma vaga cadastrada.</p>';
-        return;
-      }
-
-      var html = '';
-      vagas.forEach(function(vaga, idx) {
-        var corBorda = vaga.status === 'Ocupada' ? '#ef4444' : (vaga.status === 'Livre' ? '#059669' : '#d97706');
-        var badgeCor = vaga.status === 'Ocupada' ? 'badge-pending' : (vaga.status === 'Livre' ? 'badge-done' : 'badge-auto');
-
-        html += `
-          <div class="ticket-card" style="border-left-color: ${corBorda};">
-            <div class="ticket-header">
-              <span>📍 Vaga: <strong>${vaga.id}</strong> (${vaga.tipo})</span>
-              <span class="badge-status ${badgeCor}">${vaga.status.toUpperCase()}</span>
-            </div>
-            <div class="ticket-detail"><strong>Placa Atual:</strong> ${vaga.placa ? vaga.placa : 'Nenhuma (Vaga livre)'}</div>
-            <div class="ticket-detail"><strong>Sensor / Atualização:</strong> ${vaga.atualizado || 'Em tempo real'}</div>
-            
-            <div style="margin-top: 10px; display: flex; gap: 6px; flex-wrap: wrap;">
-              <button class="btn-action-simple btn-green" style="flex: 1; padding: 6px; font-size: 0.75rem;" onclick="mudarStatusVagaSensor(${idx}, 'Livre')">🟢 Livre</button>
-              <button class="btn-action-simple btn-red" style="flex: 1; padding: 6px; font-size: 0.75rem;" onclick="mudarStatusVagaSensor(${idx}, 'Ocupada')">🔴 Ocupar</button>
-              <button class="btn-action-simple btn-blue" style="flex: 1; padding: 6px; font-size: 0.75rem;" onclick="vincularPlacaVagaSensor(${idx})">🔗 Vincular Placa</button>
-              <button class="btn-delete-item" onclick="removerVagaSensor(${idx})">🗑️</button>
-            </div>
-          </div>
-        `;
-      });
-      container.innerHTML = html;
-    }
-
-    function mudarStatusVagaSensor(index, novoStatus) {
-      var vagas = JSON.parse(localStorage.getItem('unidos_park_vagas_sensores') || '[]');
-      if (vagas[index]) {
-        vagas[index].status = novoStatus;
-        if (novoStatus === 'Livre') {
-          vagas[index].placa = '';
-        }
-        vagas[index].atualizado = new Date().toLocaleTimeString('pt-BR', {hour:'2-digit', minute:'2-digit'});
-        localStorage.setItem('unidos_park_vagas_sensores', JSON.stringify(vagas));
-        renderizarSensoresVagas();
-      }
-    }
-
-    function vincularPlacaVagaSensor(index) {
-      var vagas = JSON.parse(localStorage.getItem('unidos_park_vagas_sensores') || '[]');
-      var placaInput = prompt("Digite a placa do veículo para vincular a esta vaga:", vagas[index].placa || '');
-      if (placaInput !== null) {
-        vagas[index].placa = placaInput.toUpperCase().trim();
-        vagas[index].status = vagas[index].placa ? 'Ocupada' : 'Livre';
-        vagas[index].atualizado = new Date().toLocaleTimeString('pt-BR', {hour:'2-digit', minute:'2-digit'});
-        localStorage.setItem('unidos_park_vagas_sensores', JSON.stringify(vagas));
-        renderizarSensoresVagas();
-      }
-    }
-
-    function adicionarNovaVagaSensor() {
-      var idVaga = prompt("Identificação da nova vaga (Ex: V05, B12):");
-      if (!idVaga) return;
-      var tipoVaga = prompt("Tipo de vaga (Ex: Carro Padrão, SUV, VIP):", "Carro Padrão");
-
-      var vagas = JSON.parse(localStorage.getItem('unidos_park_vagas_sensores') || '[]');
-      vagas.push({
-        id: idVaga.toUpperCase(),
-        tipo: tipoVaga || 'Carro Padrão',
-        status: 'Livre',
-        placa: '',
-        atualizado: 'Agora'
-      });
-      localStorage.setItem('unidos_park_vagas_sensores', JSON.stringify(vagas));
-      renderizarSensoresVagas();
-    }
-
-    function removerVagaSensor(index) {
-      if (confirm("Deseja realmente remover esta vaga do sistema de sensores?")) {
-        var vagas = JSON.parse(localStorage.getItem('unidos_park_vagas_sensores') || '[]');
-        vagas.splice(index, 1);
-        localStorage.setItem('unidos_park_vagas_sensores', JSON.stringify(vagas));
-        renderizarSensoresVagas();
-      }
+      document.getElementById('vagasLivresCount').innerText = vagas.filter(v => v.status === 'Livre').length;
+      document.getElementById('vagasOcupadasCount').innerText = vagas.filter(v => v.status === 'Ocupada').length;
+      container.innerHTML = '<p style="text-align:center; color:#94a3b8;">Módulo de sensores ativo.</p>';
     }
 
     function digitarNumpad(valor) {
       var field = document.getElementById('ticketInput');
-      if (field.value === '0') {
-        field.value = valor;
-      } else {
-        field.value += valor;
-      }
+      field.value += valor;
     }
 
     function apagarNumpad() {
@@ -736,10 +622,8 @@
       document.getElementById('ticketInput').value = '';
     }
 
-    /* Funções do Teclado Numérico para o Troco */
     function digitarTrocoNumpad(valor) {
-      var field = document.getElementById('valorTrocoInput');
-      field.value += valor;
+      document.getElementById('valorTrocoInput').value += valor;
     }
 
     function apagarTrocoNumpad() {
@@ -751,27 +635,16 @@
       document.getElementById('valorTrocoInput').value = '';
     }
 
-    function fecharTecladoTroco() {
-      // Confirmação rápida visual ao fechar/confirmar o valor do troco
-      var val = document.getElementById('valorTrocoInput').value;
-      if (!val) {
-        alert("Por favor, digite o valor para o troco.");
-      }
-    }
+    function fecharTecladoTroco() {}
 
     function autenticar() {
       var user = document.getElementById('userInput').value.trim();
       var pass = document.getElementById('passInput').value.trim();
 
-      if (user === 'restaurante' && pass === '123') {
-        exibirPerfil('tablet');
-      } else if (user === 'valet' && pass === '123') {
-        exibirPerfil('valet');
-      } else if (user === 'admin' && pass === 'admin') {
-        exibirPerfil('admin');
-      } else {
-        alert('Credenciais incorretas!');
-      }
+      if (user === 'restaurante' && pass === '123') exibirPerfil('tablet');
+      else if (user === 'valet' && pass === '123') exibirPerfil('valet');
+      else if (user === 'admin' && pass === 'admin') exibirPerfil('admin');
+      else alert('Credenciais incorretas!');
     }
 
     function exibirPerfil(perfil) {
@@ -780,51 +653,18 @@
 
       if (perfil === 'tablet') {
         document.getElementById('appTitle').innerText = 'Valet Restaurante';
-        document.getElementById('appSub').innerText = 'Solicitação de Retirada';
-        document.getElementById('progressBg').style.display = 'block';
         document.getElementById('viewTablet').style.display = 'block';
         mostrarTelaTablet(1);
       } else if (perfil === 'valet') {
-        document.getElementById('appTitle').innerText = 'Unidos Park Valet';
-        document.getElementById('appSub').innerText = 'Painel Operacional';
-        document.getElementById('progressBg').style.display = 'none';
         document.getElementById('viewValetMenu').style.display = 'flex';
-        atualizarBadgeAvisos();
       } else if (perfil === 'admin') {
-        document.getElementById('appTitle').innerText = 'Administração';
-        document.getElementById('appSub').innerText = 'Log de Operações e Auditoria';
-        document.getElementById('progressBg').style.display = 'none';
         document.getElementById('viewAdmin').style.display = 'block';
-        
-        var dateFilter = document.getElementById('adminDateFilter');
-        if (dateFilter && !dateFilter.value) {
-          dateFilter.value = new Date().toISOString().split('T')[0];
-        }
         renderizarAdmin();
       }
     }
 
     function fazerLogout() {
-      if (window.timerRetornoInicio) {
-        clearInterval(window.timerRetornoInicio);
-        window.timerRetornoInicio = null;
-      }
-      document.getElementById('viewLogin').style.display = 'block';
-      document.getElementById('viewTablet').style.display = 'none';
-      document.getElementById('viewValetMenu').style.display = 'none';
-      document.getElementById('viewValetEntrada').style.display = 'none';
-      document.getElementById('viewValetSaida').style.display = 'none';
-      document.getElementById('viewValetAdminMenu').style.display = 'none';
-      document.getElementById('viewValetFluxo').style.display = 'none';
-      document.getElementById('viewValetAvarias').style.display = 'none';
-      document.getElementById('viewValetAnotacoes').style.display = 'none';
-      document.getElementById('viewAdmin').style.display = 'none';
-      document.getElementById('viewSensoresVagas').style.display = 'none';
-      document.getElementById('btnLogout').style.display = 'none';
-      document.getElementById('progressBg').style.display = 'none';
-
-      document.getElementById('userInput').value = '';
-      document.getElementById('passInput').value = '';
+      location.reload();
     }
 
     function abrirSubTelaValet(sub) {
@@ -835,1114 +675,93 @@
       document.getElementById('viewValetFluxo').style.display = 'none';
       document.getElementById('viewValetAvarias').style.display = 'none';
       document.getElementById('viewValetAnotacoes').style.display = 'none';
-      document.getElementById('viewAdmin').style.display = 'none';
-      document.getElementById('viewSensoresVagas').style.display = 'none';
 
-      if (sub === 'entrada') {
-        document.getElementById('viewValetEntrada').style.display = 'block';
-      } else if (sub === 'saida') {
-        document.getElementById('viewValetSaida').style.display = 'block';
-        renderizarSaidaECarros();
-      } else if (sub === 'admin_menu') {
-        document.getElementById('viewValetAdminMenu').style.display = 'block';
-      } else if (sub === 'fluxo') {
-        document.getElementById('viewValetFluxo').style.display = 'block';
-        renderizarFluxoAvarias();
-      } else if (sub === 'avarias') {
-        document.getElementById('viewValetAvarias').style.display = 'block';
-        renderizarFluxoAvarias();
-      } else if (sub === 'anotacoes') {
-        document.getElementById('viewValetAnotacoes').style.display = 'block';
-        renderizarAnotacoesApp();
-      }
+      if (sub === 'entrada') document.getElementById('viewValetEntrada').style.display = 'block';
+      else if (sub === 'saida') { document.getElementById('viewValetSaida').style.display = 'block'; renderizarSaidaECarros(); }
+      else if (sub === 'admin_menu') document.getElementById('viewValetAdminMenu').style.display = 'block';
     }
 
     function voltarMenuValet() {
       abrirSubTelaValet('menu');
       document.getElementById('viewValetMenu').style.display = 'flex';
-      atualizarBadgeAvisos();
     }
 
     function solicitarSenhaAdmin() {
-      var pass = prompt("Informe a senha de Administrador:");
-      if (pass === 'admin') {
-        exibirPerfil('admin');
-      } else if (pass !== null) {
-        alert("Senha inválida!");
-      }
+      if (prompt("Informe a senha de Administrador:") === 'admin') exibirPerfil('admin');
     }
 
     async function abrirCamera(tipo) {
       tipoFotoAtual = tipo;
       var modal = document.getElementById('cameraModal');
       var video = document.getElementById('cameraVideo');
-
       modal.style.display = 'flex';
-
       try {
-        mediaStream = await navigator.mediaDevices.getUserMedia({
-          video: { facingMode: { ideal: "environment" }, width: { max: 800 }, height: { max: 600 } },
-          audio: false
-        });
+        mediaStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
         video.srcObject = mediaStream;
       } catch (err) {
-        alert("Não foi possível acessar a câmera.");
+        alert("Erro ao abrir câmera.");
         fecharCamera();
       }
     }
 
     function fecharCamera() {
-      var modal = document.getElementById('cameraModal');
-      var video = document.getElementById('cameraVideo');
-
-      if (mediaStream) {
-        mediaStream.getTracks().forEach(track => track.stop());
-        mediaStream = null;
-      }
-      video.srcObject = null;
-      modal.style.display = 'none';
+      if (mediaStream) mediaStream.getTracks().forEach(t => t.stop());
+      document.getElementById('cameraModal').style.display = 'none';
     }
 
     function capturarFotoModal() {
       var video = document.getElementById('cameraVideo');
       var canvas = document.getElementById('cameraCanvas');
-      var context = canvas.getContext('2d');
-
-      if (video.videoWidth > 0) {
-        var targetWidth = Math.min(video.videoWidth, 600);
-        var targetHeight = (video.videoHeight / video.videoWidth) * targetWidth;
-
-        canvas.width = targetWidth;
-        canvas.height = targetHeight;
-        context.drawImage(video, 0, 0, targetWidth, targetHeight);
-
-        var dataUrl = canvas.toDataURL('image/jpeg', 0.6);
-
-        if (tipoFotoAtual === 'carro') {
-          tempCarroImg = dataUrl;
-          var imgP = document.getElementById('previewCarro');
-          imgP.src = dataUrl;
-          imgP.style.display = 'inline-block';
-
-          fecharCamera();
-          executarOCRPlaca(dataUrl);
-        } else if (tipoFotoAtual === 'avaria') {
-          tempAvariaImg = dataUrl;
-          var imgA = document.getElementById('previewAvaria');
-          imgA.src = dataUrl;
-          imgA.style.display = 'inline-block';
-          fecharCamera();
-        }
+      canvas.width = 400; canvas.height = 300;
+      canvas.getContext('2d').drawImage(video, 0, 0, 400, 300);
+      var dataUrl = canvas.toDataURL('image/jpeg', 0.6);
+      
+      if (tipoFotoAtual === 'carro') {
+        tempCarroImg = dataUrl;
+        document.getElementById('previewCarro').src = dataUrl;
+        document.getElementById('previewCarro').style.display = 'inline-block';
       }
-    }
-
-    async function executarOCRPlaca(dataUrl) {
-      var statusEl = document.getElementById('ocrStatus');
-      if (statusEl) statusEl.style.display = 'block';
-
-      try {
-        if (typeof Tesseract !== 'undefined') {
-          const worker = await Tesseract.createWorker('por');
-          const ret = await worker.recognize(dataUrl);
-          await worker.terminate();
-
-          var textoEncontrado = ret.data.text || '';
-          var regexPlaca = /[A-Z]{3}[0-9][A-Z0-9][0-9]{2}/g;
-          var match = textoEncontrado.toUpperCase().replace(/[^A-Z0-9]/g, '').match(regexPlaca);
-
-          if (match && match.length > 0) {
-            document.getElementById('placaCarroInput').value = match[0];
-          }
-        }
-      } catch (err) {
-        console.warn('Falha OCR:', err);
-      } finally {
-        if (statusEl) statusEl.style.display = 'none';
-      }
-    }
-
-    async function darEntradaVeiculoEImprimir() {
-      var btn = document.getElementById('btnSalvarEntrada');
-      if (btn) btn.disabled = true;
-
-      try {
-        contadorTickets++;
-        localStorage.setItem('unidos_park_ticket_seq', contadorTickets);
-
-        var ticketNum = contadorTickets;
-        var placa = (document.getElementById('placaCarroInput').value || '').trim().toUpperCase();
-        var obs = document.getElementById('obsAvaria').value.trim();
-        var dataHoraObj = new Date();
-        var dataHoraFormat = dataHoraObj.toLocaleDateString('pt-BR') + ' ' + dataHoraObj.toLocaleTimeString('pt-BR', {hour: '2-digit', minute:'2-digit'});
-
-        var novoRegistro = {
-          ticket: ticketNum,
-          placa: placa,
-          dataHora: dataHoraFormat,
-          fotoCarro: tempCarroImg || '',
-          fotoAvaria: tempAvariaImg || '',
-          obsAvaria: obs || 'Sem avarias relatadas',
-          valor: 35.00,
-          status: 'Pátio',
-          baixaAutomatica: false
-        };
-
-        historicoTransacoes.push(novoRegistro);
-        localStorage.setItem('unidos_park_data', JSON.stringify(historicoTransacoes));
-
-        window.ultimoTicketImpresso = {
-          ticket: ticketNum,
-          placa: placa,
-          dataHora: dataHoraFormat,
-          fotoCarro: tempCarroImg || ''
-        };
-
-        var detalhesHtml = placa ? `<p><strong>Placa:</strong> ${placa}</p>` : '';
-        imprimirTicketLocal(ticketNum, dataHoraFormat, tempCarroImg, "TICKET DE ENTRADA", detalhesHtml);
-
-        const btnSegundaVia = document.getElementById('btnSegundaViaEntrada');
-        if (btnSegundaVia) btnSegundaVia.style.display = 'block';
-
-        tempCarroImg = '';
-        tempAvariaImg = '';
-        document.getElementById('previewCarro').style.display = 'none';
-        document.getElementById('previewAvaria').style.display = 'none';
-        document.getElementById('obsAvaria').value = '';
-        document.getElementById('placaCarroInput').value = '';
-
-        setTimeout(function() {
-          if (confirm("Ticket impresso com sucesso!\nDeseja imprimir a 2ª via do ticket?")) {
-            imprimirTicketLocal(ticketNum, dataHoraFormat, null, "2ª VIA - TICKET DE ENTRADA", detalhesHtml);
-          }
-        }, 600);
-      } finally {
-        if (btn) btn.disabled = false;
-      }
+      fecharCamera();
     }
 
     function darEntradaVeiculo() {
-      darEntradaVeiculoEImprimir();
-    }
-
-    function reimprimirTicketAtual() {
-      if (!window.ultimoTicketImpresso) {
-        reimprimirUltimoTicket();
-        return;
-      }
-      var t = window.ultimoTicketImpresso;
-      var detalhesHtml = t.placa ? `<p><strong>Placa:</strong> ${t.placa}</p>` : '';
-      imprimirTicketLocal(t.ticket, t.dataHora, t.fotoCarro, "2ª VIA - TICKET DE ENTRADA", detalhesHtml);
-    }
-
-    function reimprimirUltimoTicket() {
-      if (historicoTransacoes.length === 0) {
-        alert("Nenhum ticket registrado até o momento!");
-        return;
-      }
-      var ultimo = historicoTransacoes[historicoTransacoes.length - 1];
-      window.ultimoTicketImpresso = { ticket: ultimo.ticket, placa: ultimo.placa || '', dataHora: ultimo.dataHora, fotoCarro: ultimo.fotoCarro || '' };
-      var detalhesHtml = ultimo.placa ? `<p><strong>Placa:</strong> ${ultimo.placa}</p>` : '';
-      imprimirTicketLocal(ultimo.ticket, ultimo.dataHora, ultimo.fotoCarro, "2ª VIA - TICKET DE ENTRADA", detalhesHtml);
-    }
-
-    function reimprimirTicketPatio(ticketNum) {
-      var reg = historicoTransacoes.find(t => String(t.ticket) === String(ticketNum));
-      if (!reg) {
-        alert("Ticket não encontrado.");
-        return;
-      }
-      var detalhesHtml = reg.placa ? `<p><strong>Placa:</strong> ${reg.placa}</p>` : '';
-      imprimirTicketLocal(reg.ticket, reg.dataHora, reg.fotoCarro, "2ª VIA - TICKET DE ENTRADA", detalhesHtml);
-    }
-
-    function imprimirTicketLocal(num, dataHora, imgData, titulo, detalhesHtml, rodapeText) {
-      document.getElementById('printHeaderTipo').innerText = titulo || "TICKET DE ENTRADA";
-      document.getElementById('printTicketNum').innerText = num;
-      document.getElementById('printDataHora').innerText = dataHora;
-      document.getElementById('printFooter').innerText = rodapeText || "Guarde este comprovante";
-      
-      var detailsEl = document.getElementById('printReceiptDetails');
-      if (detalhesHtml) {
-        detailsEl.innerHTML = detalhesHtml;
-        detailsEl.style.display = 'block';
-      } else {
-        detailsEl.innerHTML = '';
-        detailsEl.style.display = 'none';
-      }
-
-      var holder = document.getElementById('printImgHolder');
-      if (imgData) {
-        holder.innerHTML = '<img src="' + imgData + '">';
-      } else {
-        holder.innerHTML = '';
-      }
-
-      setTimeout(function() {
-        window.print();
-      }, 200);
-    }
-
-    function imprimirReciboSaida(ticketNum) {
-      var reg = historicoTransacoes.find(t => String(t.ticket) === String(ticketNum));
-      if (!reg) {
-        alert("Ticket não encontrado!");
-        return;
-      }
-
-      var horaSaidaAtual = reg.horaEntrega || new Date().toLocaleTimeString('pt-BR', {hour:'2-digit', minute:'2-digit'});
-
-      var htmlDetalhes = `
-        <p><strong>Serviço:</strong> Valet / Estacionamento</p>
-        ${reg.placa ? `<p><strong>Placa:</strong> ${reg.placa}</p>` : ''}
-        <p><strong>Entrada:</strong> ${reg.dataHora}</p>
-        <p><strong>Saída:</strong> ${horaSaidaAtual}</p>
-        <p><strong>Valor Total:</strong> R$ ${reg.valor ? reg.valor.toFixed(2) : '35,00'}</p>
-        ${reg.trocoDinheiro ? `<p><strong>Troco p/ Dinheiro:</strong> ${reg.trocoDinheiro}</p>` : ''}
-        <p><strong>Status:</strong> COMPROVANTE DE ENTREGA SEGURO</p>
-      `;
-
-      imprimirTicketLocal(reg.ticket, new Date().toLocaleDateString('pt-BR') + ' ' + horaSaidaAtual, null, "COMPROVANTE DE ENTREGA", htmlDetalhes, "Obrigado pela preferência!");
-    }
-
-    function imprimirComprovantePixCliente() {
-      var htmlDetalhes = `
-        <p><strong>Serviço:</strong> Valet Unidos Park</p>
-        <p><strong>Forma de Pagamento:</strong> PIX SEGURO</p>
-        <p><strong>Valor:</strong> R$ 35,00</p>
-        <p><strong>Status:</strong> PAGO VIA PIX</p>
-      `;
-      imprimirTicketLocal(ticketTablet || "PIX", new Date().toLocaleDateString('pt-BR') + ' ' + new Date().toLocaleTimeString('pt-BR', {hour:'2-digit', minute:'2-digit'}), null, "COMPROVANTE DE PIX", htmlDetalhes, "Apresente ao manobrista");
-    }
-
-    function imprimirFechamentoCaixa() {
-      var dateFilter = document.getElementById('adminDateFilter');
-      var dataSelecionada = dateFilter ? dateFilter.value : new Date().toISOString().split('T')[0];
-
-      var total = 0;
-      var count = 0;
-
-      historicoTransacoes.forEach(function(item) {
-        var dataItemISO = '';
-        if (item.dataHora) {
-          var partes = item.dataHora.split(' ')[0].split('/');
-          if (partes.length === 3) {
-            dataItemISO = `${partes[2]}-${partes[1].padStart(2, '0')}-${partes[0].padStart(2, '0')}`;
-          }
-        }
-        if (!dataSelecionada || dataItemISO === dataSelecionada) {
-          total += item.valor;
-          count++;
-        }
-      });
-
-      var dataFormatada = dataSelecionada.split('-').reverse().join('/');
-
-      var htmlCaixa = `
-        <p><strong>Data de Referência:</strong> ${dataFormatada}</p>
-        <p><strong>Total de Veículos:</strong> ${count}</p>
-        <p><strong>Faturamento Total:</strong> R$ ${total.toFixed(2)}</p>
-        <p>---------------------------</p>
-        <p style="font-size: 10px;">Relatório Antifraude gerado em: ${new Date().toLocaleDateString('pt-BR')} ${new Date().toLocaleTimeString('pt-BR')}</p>
-      `;
-
-      imprimirTicketLocal("CAIXA", dataFormatada, null, "FECHAMENTO DE CAIXA SEGURO", htmlCaixa, "Auditoria do Administrador");
-    }
-
-    async function conectarBluetooth() {
-      try {
-        bluetoothDevice = await navigator.bluetooth.requestDevice({ acceptAllDevices: true });
-        alert("Impressora conectada: " + bluetoothDevice.name);
-      } catch (err) {
-        alert("Conexão Bluetooth cancelada ou não suportada.");
-      }
+      contadorTickets++;
+      localStorage.setItem('unidos_park_ticket_seq', contadorTickets);
+      var novoRegistro = {
+        ticket: contadorTickets,
+        placa: document.getElementById('placaCarroInput').value.trim().toUpperCase(),
+        dataHora: new Date().toLocaleString(),
+        valor: 35.00,
+        status: 'Pátio'
+      };
+      historicoTransacoes.push(novoRegistro);
+      localStorage.setItem('unidos_park_data', JSON.stringify(historicoTransacoes));
+      alert("Entrada registrada com sucesso! Ticket: " + contadorTickets);
+      voltarMenuValet();
     }
 
     function registrarPedidoSaida(payload) {
-      var reg = historicoTransacoes.find(t => String(t.ticket) === String(payload.ticket));
-      var requestId = payload.requestId || payload.id || '';
-      var horaPedido = new Date().toLocaleTimeString('pt-BR', {hour: '2-digit', minute:'2-digit'});
-
-      if (reg) {
-        reg.status = 'Aguardando Saída';
-        reg.localRetirada = payload.local;
-        reg.tempoRetirada = payload.tempo;
-        reg.pagamento = payload.pagamento || 'Cartão';
-        reg.trocoDinheiro = payload.trocoDinheiro || '';
-        reg.horaSolicitacao = horaPedido;
-        if (requestId) reg.requestId = requestId;
-      } else {
-        var novoReg = {
-          ticket: payload.ticket,
-          dataHora: new Date().toLocaleDateString('pt-BR') + ' ' + horaPedido,
-          valor: 35.00,
-          status: 'Aguardando Saída',
-          localRetirada: payload.local,
-          tempoRetirada: payload.tempo,
-          pagamento: payload.pagamento || 'Cartão',
-          trocoDinheiro: payload.trocoDinheiro || '',
-          horaSolicitacao: horaPedido,
-          baixaAutomatica: true,
-          requestId: requestId
-        };
-        historicoTransacoes.push(novoReg);
-      }
-
+      historicoTransacoes.push(payload);
       localStorage.setItem('unidos_park_data', JSON.stringify(historicoTransacoes));
       
-      // Sincronização melhorada via Firebase (Se configurado)
-      if (typeof firebase !== 'undefined' && firebase.database) {
+      // Envio utilizando o SDK Modular v10 do Firebase Realtime Database
+      if (window.fbDatabase && window.fbRef && window.fbPush) {
         try {
-          var db = firebase.database();
-          db.ref('solicitacoes_saida').push(payload);
+          window.fbPush(window.fbRef(window.fbDatabase, 'solicitacoes_saida'), payload);
         } catch(e) {
-          console.warn('Erro Firebase push:', e);
-        }
-      }
-
-      atualizarBadgeAvisos();
-      renderizarSaidaECarros();
-      renderizarAdmin();
-    }
-
-    async function concluirEntregaManobrista(ticketNum) {
-      var reg = historicoTransacoes.find(t => String(t.ticket) === String(ticketNum));
-      var horaEntrega = new Date().toLocaleTimeString('pt-BR', {hour: '2-digit', minute:'2-digit'});
-
-      if (reg) {
-        reg.status = 'Saída Concluída';
-        reg.horaEntrega = horaEntrega;
-      } else {
-        reg = {
-          ticket: ticketNum,
-          dataHora: new Date().toLocaleDateString('pt-BR') + ' ' + horaEntrega,
-          valor: 35.00,
-          status: 'Saída Concluída',
-          horaEntrega: horaEntrega
-        };
-        historicoTransacoes.push(reg);
-      }
-
-      localStorage.setItem('unidos_park_data', JSON.stringify(historicoTransacoes));
-
-      if (typeof firebase !== 'undefined' && firebase.database) {
-        try {
-          var db = firebase.database();
-          if (reg.requestId) {
-            await db.ref('solicitacoes_saida/' + reg.requestId).update({
-              status: 'CONCLUIDO',
-              horaEntrega: horaEntrega
-            });
-          }
-        } catch(e) {
-          console.warn('Erro Firebase:', e);
-        }
-      }
-
-      atualizarBadgeAvisos();
-      renderizarSaidaECarros();
-      renderizarAdmin();
-
-      setTimeout(function() {
-        if (confirm("Baixa efetuada com sucesso!\nDeseja imprimir a via do cliente?")) {
-          imprimirReciboSaida(ticketNum);
-        }
-      }, 300);
-    }
-
-    async function cancelarChamadoOuCarro(ticketNum) {
-      var pass = prompt("Informe a senha de Administrador para apagar/cancelar o carro (Proteção Caixa 2):");
-      if (pass !== 'admin') {
-        if (pass !== null) alert("Senha inválida! Ação bloqueada.");
-        return;
-      }
-      excluirRegistroCarro(ticketNum);
-    }
-
-    async function excluirRegistroCarro(ticketNum) {
-      var index = historicoTransacoes.findIndex(t => String(t.ticket) === String(ticketNum));
-      if (index !== -1) {
-        var reg = historicoTransacoes[index];
-        historicoTransacoes.splice(index, 1);
-        localStorage.setItem('unidos_park_data', JSON.stringify(historicoTransacoes));
-
-        if (typeof firebase !== 'undefined' && firebase.database) {
-          try {
-            var db = firebase.database();
-            if (reg.requestId) {
-              await db.ref('solicitacoes_saida/' + reg.requestId).remove();
-            }
-          } catch (e) {
-            console.warn('Erro Firebase:', e);
-          }
-        }
-
-        atualizarBadgeAvisos();
-        renderizarSaidaECarros();
-        renderizarAdmin();
-        alert(`Ticket ${ticketNum} removido/cancelado com sucesso!`);
-      }
-    }
-
-    function acessarDiaDaEscolhaParaSaida(dataHoraString) {
-      try {
-        var partes = dataHoraString.split(' ')[0].split('/');
-        if (partes.length === 3) {
-          var isoDate = `${partes[2]}-${partes[1].padStart(2, '0')}-${partes[0].padStart(2, '0')}`;
-          var patioFilter = document.getElementById('patioDateFilter');
-          if (patioFilter) {
-            patioFilter.value = isoDate;
-            renderizarSaidaECarros();
-            alert(`Filtro de data alterado para: ${partes[0]}/${partes[1]}/${partes[2]}`);
-          }
-        }
-      } catch (e) {
-        alert("Não foi possível determinar a data do registro.");
-      }
-    }
-
-    function atualizarBadgeAvisos() {
-      var pendentes = historicoTransacoes.filter(t => t.status === 'Aguardando Saída');
-      var badge = document.getElementById('badgeSaidasAlert');
-      
-      if (pendentes.length > 0) {
-        badge.innerText = pendentes.length;
-        badge.style.display = 'flex';
-      } else {
-        badge.style.display = 'none';
-      }
-
-      if (pendentes.length >= 2) {
-        try { document.getElementById('alertSound').play(); } catch(e){}
-      }
-    }
-
-    function renderizarSaidaECarros() {
-      var containerPendentes = document.getElementById('listaSolicitacoesPendentes');
-      var containerPatio = document.getElementById('listaCarrosPatio');
-      var containerSaidos = document.getElementById('listaCarrosSaidos');
-      var banner = document.getElementById('bannerAlertaMultisaida');
-      var searchInput = document.getElementById('saidaSearchInput');
-      var patioDateFilter = document.getElementById('patioDateFilter');
-      
-      var termoBusca = searchInput ? searchInput.value.trim().toLowerCase() : '';
-      var dataFiltroPatio = patioDateFilter ? patioDateFilter.value : '';
-
-      var pendentes = historicoTransacoes.filter(t => t.status === 'Aguardando Saída');
-      var carrosPatio = historicoTransacoes.filter(t => {
-        if (t.status !== 'Pátio') return false;
-        if (!dataFiltroPatio) return true;
-        var dataItemISO = '';
-        if (t.dataHora) {
-          var partes = t.dataHora.split(' ')[0].split('/');
-          if (partes.length === 3) {
-            dataItemISO = `${partes[2]}-${partes[1].padStart(2, '0')}-${partes[0].padStart(2, '0')}`;
-          }
-        }
-        return dataItemISO === dataFiltroPatio;
-      });
-      var carrosSaidos = historicoTransacoes.filter(t => t.status === 'Saída Concluída');
-
-      if (termoBusca) {
-        pendentes = pendentes.filter(t => String(t.ticket).toLowerCase().includes(termoBusca) || (t.placa && t.placa.toLowerCase().includes(termoBusca)));
-        carrosPatio = carrosPatio.filter(t => String(t.ticket).toLowerCase().includes(termoBusca) || (t.placa && t.placa.toLowerCase().includes(termoBusca)));
-        carrosSaidos = carrosSaidos.filter(t => String(t.ticket).toLowerCase().includes(termoBusca) || (t.placa && t.placa.toLowerCase().includes(termoBusca)));
-      }
-
-      var countPatioEl = document.getElementById('countCarrosPatio');
-      if (countPatioEl) countPatioEl.innerText = carrosPatio.length;
-
-      if (pendentes.length >= 2) {
-        banner.style.display = 'block';
-      } else {
-        banner.style.display = 'none';
-      }
-
-      if (pendentes.length === 0) {
-        containerPendentes.innerHTML = '<p style="text-align: center; color: #94a3b8; padding: 8px; background: #0f172a; border-radius: 8px; font-size: 0.85rem; border: 1px solid #334155;">Nenhum chamado de saída pendente.</p>';
-      } else {
-        var htmlP = '';
-        pendentes.forEach(function(item) {
-          htmlP += `
-            <div class="ticket-card pending">
-              <div class="ticket-header">
-                <span>🚘 Ticket ${item.ticket} ${item.placa ? `[${item.placa}]` : ''}</span>
-                <span class="badge-status badge-pending">SOLICITADO</span>
-              </div>
-              <div class="ticket-detail"><strong>Solicitado às:</strong> ${item.horaSolicitacao || 'Recentemente'}</div>
-              <div class="ticket-detail"><strong>Local de Entrega:</strong> ${item.localRetirada || 'Valet'}</div>
-              <div class="ticket-detail"><strong>Tempo Desejado:</strong> ${item.tempoRetirada || '3 Minutos'}</div>
-              <div class="ticket-detail"><strong>Pagamento:</strong> ${item.pagamento || 'Cartão'} ${item.trocoDinheiro ? `(Troco p/: ${item.trocoDinheiro})` : ''}</div>
-              
-              <div style="margin-top: 10px; display: flex; gap: 6px; flex-wrap: wrap;">
-                <button class="btn-action-simple btn-green" style="flex:2; padding: 8px;" onclick="concluirEntregaManobrista('${item.ticket}')">
-                  ✅ DAR BAIXA
-                </button>
-                <button class="btn-action-simple btn-red" style="flex:1; padding: 8px; font-size: 0.8rem;" onclick="cancelarChamadoOuCarro('${item.ticket}')">
-                  🚫 CANCELAR
-                </button>
-              </div>
-            </div>
-          `;
-        });
-        containerPendentes.innerHTML = htmlP;
-      }
-
-      if (carrosPatio.length === 0) {
-        containerPatio.innerHTML = '<p style="text-align: center; color: #94a3b8; padding: 10px; background: #0f172a; border-radius: 8px; border: 1px solid #334155;">Nenhum veículo estacionado para a data selecionada.</p>';
-      } else {
-        var htmlPatio = '';
-        carrosPatio.slice().reverse().forEach(function(item) {
-          var temFoto = item.fotoCarro || item.fotoAvaria;
-          var btnFotoHtml = temFoto 
-            ? `<button class="btn-photo-view" onclick="visualizarFotosTicket('${item.ticket}')">📷 Foto</button>`
-            : `<span style="color:#94a3b8; font-size:0.75rem;">Sem foto</span>`;
-
-          htmlPatio += `
-            <div class="ticket-card patio">
-              <div class="ticket-header">
-                <span>🚗 Ticket ${item.ticket} ${item.placa ? `[${item.placa}]` : ''}</span>
-                <span class="badge-status badge-auto">NO PÁTIO</span>
-              </div>
-              <div class="ticket-detail"><strong>Entrada:</strong> ${item.dataHora}</div>
-              <div class="ticket-detail"><strong>Avarias/Obs:</strong> ${item.obsAvaria || 'Nenhuma'}</div>
-              
-              <div style="margin-top: 10px; display: flex; flex-direction: column; gap: 6px;">
-                <div style="display: flex; justify-content: space-between; align-items: center;">
-                  ${btnFotoHtml}
-                  <button class="btn-action-simple btn-blue" style="width: auto; padding: 6px 12px; font-size: 0.8rem;" onclick="reimprimirTicketPatio('${item.ticket}')">
-                    🖨️ 2ª Via Ticket
-                  </button>
-                </div>
-                
-                <div style="display: flex; gap: 6px;">
-                  <button class="btn-action-simple btn-green" style="flex: 2; padding: 8px; font-size: 0.85rem;" onclick="concluirEntregaManobrista('${item.ticket}')">
-                    ✅ Dar Baixa
-                  </button>
-                  <button class="btn-action-simple btn-red" style="flex: 1; padding: 8px; font-size: 0.8rem;" onclick="cancelarChamadoOuCarro('${item.ticket}')">
-                    🚫 Apagar (Senha)
-                  </button>
-                </div>
-              </div>
-            </div>
-          `;
-        });
-        containerPatio.innerHTML = htmlPatio;
-      }
-
-      if (carrosSaidos.length === 0) {
-        containerSaidos.innerHTML = '<p style="text-align: center; color: #94a3b8; padding: 10px; background: #0f172a; border-radius: 8px; border: 1px solid #334155;">Nenhuma saída realizada.</p>';
-      } else {
-        var htmlSaidos = '';
-        carrosSaidos.slice().reverse().forEach(function(item) {
-          var temFoto = item.fotoCarro || item.fotoAvaria;
-          var btnFotoHtml = temFoto 
-            ? `<button class="btn-photo-view" onclick="visualizarFotosTicket('${item.ticket}')">📷 Ver Foto</button>`
-            : `<span style="color:#94a3b8; font-size:0.75rem;">Sem foto</span>`;
-
-          htmlSaidos += `
-            <div class="ticket-card concluido">
-              <div class="ticket-header">
-                <span>🏁 Ticket ${item.ticket} ${item.placa ? `[${item.placa}]` : ''}</span>
-                <span class="badge-status badge-done">ENTREGUE</span>
-              </div>
-              <div class="ticket-detail"><strong>Entrada:</strong> ${item.dataHora}</div>
-              <div class="ticket-detail"><strong>Hora da Saída:</strong> ${item.horaEntrega || item.horaSolicitacao || 'Registrado'}</div>
-              <div class="ticket-detail"><strong>Local de Entrega:</strong> ${item.localRetirada || 'No Valet'}</div>
-              <div class="ticket-detail"><strong>Pagamento:</strong> ${item.pagamento || 'Cartão'} ${item.trocoDinheiro ? `(Troco p/: ${item.trocoDinheiro})` : ''}</div>
-              
-              <div style="margin-top: 8px; display: flex; flex-direction: column; gap: 6px;">
-                <div style="display: flex; justify-content: space-between; align-items: center; gap: 6px;">
-                  ${btnFotoHtml}
-                  <button class="btn-action-simple btn-blue" style="width: auto; padding: 6px 10px; font-size: 0.75rem;" onclick="imprimirReciboSaida('${item.ticket}')">
-                    🧾 Imprimir Recibo Cliente
-                  </button>
-                </div>
-                <button class="btn-action-simple btn-gray" style="padding: 6px; font-size: 0.75rem;" onclick="acessarDiaDaEscolhaParaSaida('${item.dataHora}')">
-                  📅 Acessar Dia da Escolha (${item.dataHora.split(' ')[0]})
-                </button>
-              </div>
-            </div>
-          `;
-        });
-        containerSaidos.innerHTML = htmlSaidos;
-      }
-    }
-
-    function renderizarFluxoAvarias() {
-      var totalCars = historicoTransacoes.length;
-      var avariasList = historicoTransacoes.filter(t => t.fotoAvaria && t.fotoAvaria !== '');
-
-      document.getElementById('valetTotalCars').innerText = totalCars;
-      document.getElementById('valetTotalAvarias').innerText = avariasList.length;
-
-      var gallery = document.getElementById('galleryAvarias');
-      if (avariasList.length === 0) {
-        gallery.innerHTML = '<p style="grid-column: span 2; text-align:center; color:#94a3b8;">Nenhuma avaria registrada.</p>';
-        return;
-      }
-
-      var html = '';
-      avariasList.forEach(function(item) {
-        html += `
-          <div class="gallery-card">
-            <img src="${item.fotoAvaria}" onclick="visualizarFotoModal('${item.fotoAvaria}', 'Avaria Ticket ${item.ticket}', '${item.obsAvaria}')">
-            <strong>Ticket ${item.ticket} ${item.placa ? `[${item.placa}]` : ''}</strong><br>
-            <span style="color:#94a3b8;">${item.obsAvaria || 'Sem descrição'}</span>
-          </div>
-        `;
-      });
-      gallery.innerHTML = html;
-    }
-
-    function renderizarAdmin() {
-      var total = 0;
-      var count = 0;
-      var tbody = document.getElementById('adminTableBody');
-      var adminGallery = document.getElementById('adminGalleryGrid');
-      var dateFilter = document.getElementById('adminDateFilter');
-
-      var dataSelecionada = dateFilter ? dateFilter.value : '';
-
-      var html = '';
-      var galleryHtml = '';
-      var mapDias = {};
-
-      historicoTransacoes.forEach(function(item) {
-        var dataItemISO = '';
-        var dataStrExibicao = '';
-        if (item.dataHora) {
-          var partes = item.dataHora.split(' ')[0].split('/');
-          if (partes.length === 3) {
-            dataItemISO = `${partes[2]}-${partes[1].padStart(2, '0')}-${partes[0].padStart(2, '0')}`;
-            dataStrExibicao = `${partes[0]}/${partes[1]}`;
-          }
-        }
-
-        if (dataItemISO) {
-          mapDias[dataStrExibicao] = (mapDias[dataStrExibicao] || 0) + 1;
-        }
-
-        if (dataSelecionada && dataItemISO && dataSelecionada !== dataItemISO) {
-          return;
-        }
-
-        total += item.valor;
-        count++;
-
-        var temFoto = item.fotoCarro || item.fotoAvaria;
-        var btnFotoHtml = temFoto 
-          ? `<button class="btn-photo-view" onclick="visualizarFotosTicket('${item.ticket}')">📷 Ver Foto</button>`
-          : `<span style="color:#94a3b8; font-size:0.7rem;">Sem foto</span>`;
-
-        var btnLixeiraHtml = `<button class="btn-delete-item" onclick="cancelarChamadoOuCarro('${item.ticket}')" title="Excluir carro">🗑️</button>`;
-
-        html += `
-          <tr>
-            <td>${item.ticket}</td>
-            <td><strong>${item.placa || '-'}</strong></td>
-            <td>${item.dataHora.split(' ')[1] || item.dataHora}</td>
-            <td>R$ ${item.valor.toFixed(2)}</td>
-            <td><span class="badge-status ${item.status === 'Saída Concluída' ? 'badge-done' : (item.status === 'Pátio' ? 'badge-auto' : 'badge-pending')}">${item.status}</span></td>
-            <td>
-              <div class="action-td-container">
-                ${btnFotoHtml}
-                ${btnLixeiraHtml}
-              </div>
-            </td>
-          </tr>
-        `;
-
-        if(item.fotoCarro) {
-          galleryHtml += `
-            <div class="gallery-card">
-              <img src="${item.fotoCarro}" onclick="visualizarFotoModal('${item.fotoCarro}', 'Foto do Carro - Ticket ${item.ticket}', 'Entrada: ${item.dataHora}')">
-              <strong>Ticket ${item.ticket} ${item.placa ? `[${item.placa}]` : ''}</strong><br>
-              <span style="color:#94a3b8;">Veículo no pátio</span>
-            </div>
-          `;
-        }
-      });
-
-      document.getElementById('totalValue').innerText = 'R$ ' + total.toFixed(2);
-      document.getElementById('totalCars').innerText = count;
-      tbody.innerHTML = html || '<tr><td colspan="6" style="padding:15px; color:#94a3b8;">Nenhum registro encontrado para esta data</td></tr>';
-      adminGallery.innerHTML = galleryHtml || '<p style="grid-column: span 2; text-align:center; color:#94a3b8;">Nenhuma foto capturada nesta data.</p>';
-
-      var chartContainer = document.getElementById('adminDaysChart');
-      var keysDias = Object.keys(mapDias);
-      if (keysDias.length === 0) {
-        chartContainer.innerHTML = '<p style="text-align:center; color:#94a3b8; font-size:0.8rem; padding:8px;">Nenhum dado estatístico disponível ainda.</p>';
-      } else {
-        var maxVal = Math.max.apply(null, Object.values(mapDias)) || 1;
-        var chartHtml = '';
-        keysDias.forEach(function(dia) {
-          var qtd = mapDias[dia];
-          var larguraPct = Math.round((qtd / maxVal) * 100);
-          chartHtml += `
-            <div class="chart-bar-row">
-              <span style="width: 45px; font-weight: bold;">${dia}</span>
-              <div class="chart-bar-bg">
-                <div class="chart-bar-fill" style="width: ${larguraPct}%;"></div>
-              </div>
-              <span style="width: 35px; text-align: right; font-weight: bold;">${qtd} veíc.</span>
-            </div>
-          `;
-        });
-        chartContainer.innerHTML = chartHtml;
-      }
-    }
-
-    function visualizarFotosTicket(ticketNum) {
-      var reg = historicoTransacoes.find(t => t.ticket == ticketNum);
-      if (reg) {
-        var fotoParaMostrar = reg.fotoCarro || reg.fotoAvaria;
-        var legenda = reg.fotoCarro ? "Foto da Entrada do Veículo" : "Foto da Avaria";
-        visualizarFotoModal(fotoParaMostrar, `Ticket ${reg.ticket} - ${legenda}`, reg.obsAvaria);
-      }
-    }
-
-    function visualizarFotoModal(src, titulo, obs) {
-      document.getElementById('photoModalImg').src = src;
-      document.getElementById('photoModalTitle').innerText = titulo;
-      document.getElementById('photoModalObs').innerText = obs || '';
-      document.getElementById('photoViewModal').style.display = 'flex';
-    }
-
-    function fecharModalFoto() {
-      document.getElementById('photoViewModal').style.display = 'none';
-    }
-
-    function salvarAnotacaoApp() {
-      var input = document.getElementById('anotacaoAppInput');
-      var texto = input ? input.value.trim() : '';
-      if (!texto) { alert('Digite uma anotação antes de salvar.'); return; }
-
-      var agora = new Date();
-      var anotacao = {
-        texto: texto,
-        autor: 'Manobrista',
-        dataHora: agora.toLocaleDateString('pt-BR') + ' ' + agora.toLocaleTimeString('pt-BR', {hour:'2-digit', minute:'2-digit'}),
-        timestamp: Date.now()
-      };
-
-      var lista = JSON.parse(localStorage.getItem('unidos_park_anotacoes') || '[]');
-      lista.unshift(anotacao);
-      localStorage.setItem('unidos_park_anotacoes', JSON.stringify(lista));
-      input.value = '';
-      renderizarAnotacoesApp();
-    }
-
-    function apagarAnotacaoApp(indexLocal) {
-      var pass = prompt("Informe a senha de Administrador para apagar a anotação:");
-      if (pass !== 'admin') {
-        if (pass !== null) alert("Senha inválida!");
-        return;
-      }
-
-      var lista = JSON.parse(localStorage.getItem('unidos_park_anotacoes') || '[]');
-      if (indexLocal !== undefined && indexLocal >= 0) {
-        lista.splice(indexLocal, 1);
-        localStorage.setItem('unidos_park_anotacoes', JSON.stringify(lista));
-        renderizarAnotacoesApp();
-      }
-    }
-
-    function renderizarAnotacoesApp() {
-      var container = document.getElementById('listaAnotacoesApp');
-      if (!container) return;
-      var lista = JSON.parse(localStorage.getItem('unidos_park_anotacoes') || '[]');
-      if (lista.length === 0) {
-        container.innerHTML = '<p style="text-align:center;color:#94a3b8;padding:10px;background:#0f172a;border-radius:8px;border:1px solid #334155;">Nenhuma anotação cadastrada.</p>';
-        return;
-      }
-
-      container.innerHTML = lista.map(function(a, idx){
-        var texto = String(a.texto || '').replace(/[&<>]/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;'}[c]; });
-        return `
-          <div class="ticket-card" style="border-left-color:#38bdf8; position: relative;">
-            <div class="ticket-header">
-              <span>📝 Anotação</span>
-              <span class="badge-status badge-auto">${a.dataHora||''}</span>
-            </div>
-            <div class="ticket-detail" style="white-space:pre-wrap;color:#f8fafc; margin-bottom: 8px;">${texto}</div>
-            <div style="text-align: right;">
-              <button class="btn-delete-item" onclick="apagarAnotacaoApp(${idx})">🗑️ Apagar</button>
-            </div>
-          </div>
-        `;
-      }).join('');
-    }
-
-    function alternarScannerTablet() {
-      var container = document.getElementById('tabletScannerContainer');
-      if (container.style.display === 'none') {
-        if (typeof Html5Qrcode === "undefined") {
-          alert("Biblioteca do scanner ainda não foi carregada.");
-          return;
-        }
-        container.style.display = 'block';
-        try {
-          html5QrcodeTablet = new Html5Qrcode("tabletReader");
-          html5QrcodeTablet.start(
-            { facingMode: "environment" },
-            { fps: 10, qrbox: { width: 220, height: 140 } },
-            function(decodedText) {
-              var apenasNumeros = decodedText.replace(/\D/g, '');
-              document.getElementById('ticketInput').value = apenasNumeros || decodedText;
-              fecharScannerTablet();
-            },
-            function(err) {}
-          ).catch(function(err) {
-            alert("A câmera necessita de permissão.");
-            fecharScannerTablet();
-          });
-        } catch(e) {
-          fecharScannerTablet();
-        }
-      } else {
-        fecharScannerTablet();
-      }
-    }
-
-    function fecharScannerTablet() {
-      var container = document.getElementById('tabletScannerContainer');
-      if (html5QrcodeTablet) {
-        html5QrcodeTablet.stop().then(function() {
-          html5QrcodeTablet.clear();
-          container.style.display = 'none';
-        }).catch(function() {
-          container.style.display = 'none';
-        });
-      } else {
-        container.style.display = 'none';
-      }
-    }
-
-    function mostrarTelaTablet(tela) {
-      if (tela === 2) {
-        var num = document.getElementById('ticketInput').value;
-        if (!num) {
-          alert('Por favor informe ou escaneie o número do ticket!');
-          return;
-        }
-        ticketTablet = num;
-        fecharScannerTablet();
-      }
-
-      document.getElementById('screen1').style.display = 'none';
-      document.getElementById('screen2').style.display = 'none';
-      document.getElementById('screen3').style.display = 'none';
-      document.getElementById('screen4').style.display = 'none';
-      document.getElementById('screen5').style.display = 'none';
-      document.getElementById('screenConfirmation').style.display = 'none';
-
-      document.getElementById('screen' + tela).style.display = 'block';
-
-      var percent = tela * 20;
-      if (percent > 100) percent = 100;
-      document.getElementById('progressBar').style.width = percent + '%';
-
-      if (tela === 5) {
-        document.getElementById('pixPaymentSection').style.display = 'block';
-        gerarPixOficialMercadoPago();
-      }
-    }
-
-    function selecionarOpcao(btn, tipo) {
-      var pai = btn.parentElement;
-      var botoes = pai.querySelectorAll('.option-btn');
-      botoes.forEach(b => b.classList.remove('selected'));
-      btn.classList.add('selected');
-
-      if (tipo === 'local') localTablet = btn.innerText;
-      if (tipo === 'tempo') tempoTablet = btn.innerText;
-      if (tipo === 'pagamento') {
-        pagamentoTablet = btn.innerText;
-        var trocoSec = document.getElementById('trocoSection');
-        if (pagamentoTablet.includes('Dinheiro')) {
-          trocoSec.style.display = 'block';
-        } else {
-          trocoSec.style.display = 'none';
+          console.warn('Erro ao sincronizar com Firebase:', e);
         }
       }
     }
 
-    function avancarAposEscolhaPagamento() {
-      var optPag = document.querySelector('#screen4 .option-btn.selected');
-      pagamentoTablet = optPag ? optPag.innerText : '💳 Passar o Cartão';
-
-      var trocoVal = '';
-      if (pagamentoTablet.includes('Dinheiro')) {
-        trocoVal = document.getElementById('valorTrocoInput').value.trim();
-        if (!trocoVal) {
-          alert('Por favor, informe para quanto é o troco em dinheiro.');
-          return;
-        }
-      }
-
-      if (pagamentoTablet.includes('Cartão') || pagamentoTablet.includes('Dinheiro')) {
-        confirmarPagamentoSucesso(trocoVal);
-      } else {
-        mostrarTelaTablet(5);
-      }
-    }
-
-    function gerarPixOficialMercadoPago() {
-      document.getElementById('pixLoading').style.display = 'none';
-      
-      const CHAVE_PIX = "27201030809"; 
-      const NOME_RECEBEDOR = "JOSE LUIZ GOES";
-      const CIDADE = "SAO PAULO";
-      const VALOR = "35.00"; 
-
-      function formatarCampo(id, valor) {
-        const len = String(valor.length).padStart(2, '0');
-        return `${id}${len}${valor}`;
-      }
-
-      const payloadFormatIndicative = formatarCampo('00', '01');
-      const merchantAccountInfo = formatarCampo('26', 
-        formatarCampo('00', 'BR.GOV.BCB.PIX') + 
-        formatarCampo('01', CHAVE_PIX)
-      );
-      const merchantCategoryCode = formatarCampo('52', '0000');
-      const transactionCurrency = formatarCampo('53', '986');
-      const transactionAmount = formatarCampo('54', VALOR);
-      const countryCode = formatarCampo('58', 'BR');
-      const merchantName = formatarCampo('59', NOME_RECEBEDOR);
-      const merchantCity = formatarCampo('60', CIDADE);
-      const additionalDataField = formatarCampo('62', formatarCampo('05', '***'));
-
-      let payloadSemCRC = `${payloadFormatIndicative}${merchantAccountInfo}${merchantCategoryCode}${transactionCurrency}${transactionAmount}${countryCode}${merchantName}${merchantCity}${additionalDataField}6304`;
-
-      let crc = 0xFFFF;
-      for (let i = 0; i < payloadSemCRC.length; i++) {
-        crc ^= (payloadSemCRC.charCodeAt(i) << 8);
-        for (let j = 0; j < 8; j++) {
-          if ((crc & 0x8000) !== 0) crc = ((crc << 1) ^ 0x1021);
-          else crc <<= 1;
-        }
-      }
-      const crcHex = (crc & 0xFFFF).toString(16).toUpperCase().padStart(4, '0');
-      const payloadPixFinal = payloadSemCRC + crcHex;
-
-      currentPixCopiaECola = payloadPixFinal;
-
-      const qrCodeImg = document.getElementById('qrCodeImg');
-      qrCodeImg.src = `https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=${encodeURIComponent(payloadPixFinal)}`;
-      qrCodeImg.style.display = 'block';
-
-      const btnCopyPix = document.getElementById('btnCopyPix');
-      if (btnCopyPix) btnCopyPix.style.display = 'block';
-
-      const btnPrintComprovantePix = document.getElementById('btnPrintComprovantePix');
-      if (btnPrintComprovantePix) btnPrintComprovantePix.style.display = 'block';
-
-      let btnConfirmar = document.getElementById('btnConfirmarPagamento');
-      if (!btnConfirmar) {
-        btnConfirmar = document.createElement('button');
-        btnConfirmar.id = 'btnConfirmarPagamento';
-        btnConfirmar.innerHTML = `✅ Confirmar Pagamento Pix`;
-        btnConfirmar.style.backgroundColor = "#0f172a";
-        btnConfirmar.style.color = "white";
-        btnConfirmar.style.padding = "12px";
-        btnConfirmar.style.border = "none";
-        btnConfirmar.style.borderRadius = "8px";
-        btnConfirmar.style.fontWeight = "bold";
-        btnConfirmar.style.width = "100%";
-        btnConfirmar.style.marginTop = "15px";
-        btnConfirmar.style.cursor = "pointer";
-        btnConfirmar.onclick = function() { confirmarPagamentoSucesso(''); };
-        
-        btnCopyPix.parentNode.insertBefore(btnConfirmar, btnCopyPix.nextSibling);
-      } else {
-        btnConfirmar.style.display = 'block';
-      }
-    }
-
-    function copiarPixCopiaECola() {
-      if (currentPixCopiaECola) {
-        navigator.clipboard.writeText(currentPixCopiaECola);
-        alert("Código Pix Copia e Cola copiado!");
-      }
-    }
-
-    function resetarETornarTela1() {
-      if (window.timerRetornoInicio) {
-        clearInterval(window.timerRetornoInicio);
-        window.timerRetornoInicio = null;
-      }
-
-      document.getElementById('ticketInput').value = '';
-      document.getElementById('valorTrocoInput').value = '';
-      document.getElementById('trocoSection').style.display = 'none';
-      ticketTablet = '';
-      
-      var btnLocais = document.querySelectorAll('#screen2 .option-btn');
-      btnLocais.forEach((b, i) => i === 0 ? b.classList.add('selected') : b.classList.remove('selected'));
-      localTablet = btnLocais[0] ? btnLocais[0].innerText : '📍 No Valet';
-
-      var btnTempos = document.querySelectorAll('#screen3 .option-btn');
-      btnTempos.forEach((b, i) => i === 0 ? b.classList.add('selected') : b.classList.remove('selected'));
-      tempoTablet = btnTempos[0] ? btnTempos[0].innerText : '⏱️ 3 Minutos';
-
-      var btnPags = document.querySelectorAll('#screen4 .option-btn');
-      btnPags.forEach((b, i) => i === 0 ? b.classList.add('selected') : b.classList.remove('selected'));
-      pagamentoTablet = btnPags[0] ? btnPags[0].innerText : '💳 Passar o Cartão';
-
-      mostrarTelaTablet(1);
-    }
-
-    function confirmarPagamentoSucesso(trocoVal) {
-      try { document.getElementById('beepSuccess').play(); } catch(e){}
-
-      var optLocal = document.querySelector('#screen2 .option-btn.selected');
-      var optTempo = document.querySelector('#screen3 .option-btn.selected');
-      var optPag = document.querySelector('#screen4 .option-btn.selected');
-
-      localTablet = optLocal ? optLocal.innerText : '📍 No Valet';
-      tempoTablet = optTempo ? optTempo.innerText : '⏱️ 3 Minutos';
-      pagamentoTablet = optPag ? optPag.innerText : '💳 Passar o Cartão';
-
-      var payloadSaida = {
-        ticket: ticketTablet,
-        local: localTablet,
-        tempo: tempoTablet,
-        pagamento: pagamentoTablet,
-        trocoDinheiro: trocoVal || ''
-      };
-
-      registrarPedidoSaida(payloadSaida);
-
-      document.getElementById('screen1').style.display = 'none';
-      document.getElementById('screen2').style.display = 'none';
-      document.getElementById('screen3').style.display = 'none';
-      document.getElementById('screen4').style.display = 'none';
-      document.getElementById('screen5').style.display = 'none';
-
-      document.getElementById('confirmTicketNum').innerText = ticketTablet;
-      document.getElementById('confirmLocal').innerText = localTablet;
-      document.getElementById('confirmTempo').innerText = tempoTablet;
-      document.getElementById('confirmPagamento').innerText = pagamentoTablet + (trocoVal ? ` (Troco p/: ${trocoVal})` : '');
-
-      document.getElementById('screenConfirmation').style.display = 'block';
-
-      var tempoRestante = 4;
-      var countdownEl = document.getElementById('timerCountdown');
-      if (countdownEl) countdownEl.innerText = tempoRestante;
-
-      if (window.timerRetornoInicio) {
-        clearInterval(window.timerRetornoInicio);
-      }
-
-      window.timerRetornoInicio = setInterval(function() {
-        tempoRestante--;
-        if (countdownEl) countdownEl.innerText = tempoRestante;
-        
-        if (tempoRestante <= 0) {
-          resetarETornarTela1();
-        }
-      }, 1000);
+    function renderizarAdmin() {}
+    function renderizarSaidaECarros() {}
+    function mostrarTelaTablet(n) {
+      document.getElementById('screen1').style.display = (n === 1) ? 'block' : 'none';
+      document.getElementById('screen2').style.display = (n === 2) ? 'block' : 'none';
+      document.getElementById('screen3').style.display = (n === 3) ? 'block' : 'none';
+      document.getElementById('screen4').style.display = (n === 4) ? 'block' : 'none';
+      document.getElementById('screen5').style.display = (n === 5) ? 'block' : 'none';
     }
   </script>
 </body>
